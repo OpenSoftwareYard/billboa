@@ -4,5 +4,9 @@ export default defineNuxtConfig({
   ssr: false,
   css: [
     '~/assets/scss/main.scss'
-  ]
+  ],
+  modules: ['@nuxtjs/supabase'],
+  supabase: {
+    redirect: false,
+  }
 })

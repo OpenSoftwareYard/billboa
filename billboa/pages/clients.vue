@@ -9,16 +9,16 @@
                 <tr>
                   <th class="checkbox-column">Record no.</th>
                   <th>Name</th>
-                  <th>Email</th>
-                  <th>Company ID</th>
+                  <th>Country</th>
+                  <th>Company number</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="checkbox-column">1</td>
-                  <td>Client 1 SRL</td>
-                  <td>contact@client1.ro</td>
-                  <td>RO12345678</td>
+                <tr v-for="client in clients">
+                  <td class="checkbox-column">{{ client.id }}</td>
+                  <td>{{ client.name }}</td>
+                  <td>{{ client.country }}</td>
+                  <td>{{ client.company_number }}</td>
                 </tr>
               </tbody>
             </table>
@@ -28,3 +28,13 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+const supabase = useSupabaseClient<Database>();
+
+const { data: clients } = await useAsyncData('clients', async () => {
+  const { data } = await supabase.from('clients').select('*');
+  return data;
+});
+
+</script>
