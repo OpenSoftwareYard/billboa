@@ -1,17 +1,12 @@
 <template>
-  <div class="layout-px-spacing">
-    <div class="middle-content container-xxl p-0">
-      <div class="secondary-nav">
-        <div class="breadcrumbs-container">
-          <Breadcrumbs :breadcrumbs="breadcrumbs" />
-        </div>
-      </div>
-      <div class="row" id="cancel-row">
-        <div
-          class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing"
-        >
-          <div class="widget-content widget-content-area br-8">
-            <table class="table dt-table-hover" style="width: 100%">
+  <div class="row" id="cancel-row">
+    <div
+      class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing"
+    >
+      <div class="statbox widget box box-shadow">
+        <div class="widget-content widget-content-area br-8">
+          <div class="table-responsive">
+            <table class="table table-hover table-bordered" style="width: 100%">
               <thead>
                 <tr>
                   <th class="checkbox-column">Record no.</th>
@@ -37,7 +32,6 @@
 </template>
 
 <script setup lang="ts">
-const { breadcrumbs } = useBreadcrumbs();
 const supabase = useSupabaseClient<Database>();
 
 const { data: clients } = await useAsyncData("clients", async () => {

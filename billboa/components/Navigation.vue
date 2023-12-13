@@ -1,5 +1,5 @@
 <template>
-  <ul class="list-unstyled menu-categories" id="accordionExample">
+  <ul class="list-unstyled menu-categories ps" id="accordionExample">
     <li :class="routeClass('/')">
       <NuxtLink to="/" class="dropdown-toggle">
         <div class="">
