@@ -1867,6 +1867,7 @@ body {
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
     border-radius: 0;
     left: 0;
   }
@@ -1880,6 +1881,7 @@ body {
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
   }
 
   /* display .overlay when it has the .active class */
