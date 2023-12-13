@@ -10,7 +10,7 @@
     </header>
   </div>
 
-  <div class="main-container" id="container">
+  <div :class="mainContainerClass" id="container">
     <div class="overlay"></div>
 
     <div class="sidebar-wrapper sidebar-theme">
@@ -25,7 +25,10 @@
         <div class="middle-content p-0">
           <div class="secondary-nav">
             <div class="breadcrumbs-container">
-              <Breadcrumbs :breadcrumbs="breadcrumbs" />
+              <Breadcrumbs
+                :breadcrumbs="breadcrumbs"
+                @sidebar-toggled="toggleSidebar"
+              />
             </div>
           </div>
           <NuxtPage />
@@ -37,4 +40,12 @@
 
 <script setup lang="ts">
 const { breadcrumbs } = useBreadcrumbs();
+
+const mainContainerClass = ref("main-container");
+
+function toggleSidebar(collapsed: boolean) {
+  return collapsed
+    ? (mainContainerClass.value = "main-container sidebar-closed sbar-open")
+    : (mainContainerClass.value = "main-container");
+}
 </script>

@@ -20,7 +20,7 @@ export const useBreadcrumbs = () => {
   const breadcrumbs: Ref<Array<Breadcrumb>> = ref([HOMEPAGE]);
 
   function getBreadcrumbs(currRoute: string): any[] {
-    if (currRoute === "") return [HOMEPAGE];
+    if (currRoute === "" || currRoute === "/") return [HOMEPAGE];
 
     const paths = getBreadcrumbs(
       currRoute.slice(0, currRoute.lastIndexOf("/")),
@@ -53,8 +53,6 @@ export const useBreadcrumbs = () => {
       matched: route.matched,
     }),
     (route) => {
-      if (route.path === "/") return;
-
       breadcrumbs.value = getBreadcrumbs(route.path);
     },
     {

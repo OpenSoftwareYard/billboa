@@ -4,6 +4,7 @@
       href="javascript:void(0);"
       class="btn-toggle sidebarCollapse"
       data-placement="bottom"
+      @click="toggleSidebar"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -49,7 +50,18 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits<{
+  (e: "sidebarToggled", collpsed: boolean): void;
+}>();
+
+const sidebarCollapsed = ref(false);
+
 function activeClass(breadcrumb: Breadcrumb) {
   return breadcrumb.active ? "breadcrumb-item active" : "breadcrumb-item";
+}
+
+function toggleSidebar() {
+  sidebarCollapsed.value = !sidebarCollapsed.value;
+  emit("sidebarToggled", sidebarCollapsed.value);
 }
 </script>
