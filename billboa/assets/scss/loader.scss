@@ -1,4 +1,4 @@
-@import 'light/base/base';
+@import "light/base/base";
 div#load_screen {
   background: rgb(236, 239, 255);
   opacity: 1;
@@ -22,9 +22,8 @@ div#load_screen {
 
     .spinner-grow {
       width: 2.5rem;
-      height: 2.5rem
+      height: 2.5rem;
     }
-    
   }
 }
 

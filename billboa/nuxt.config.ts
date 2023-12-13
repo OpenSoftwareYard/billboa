@@ -2,11 +2,9 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
-  css: [
-    '~/assets/scss/main.scss'
-  ],
-  modules: ['@nuxtjs/supabase'],
+  css: ["~/assets/scss/main.scss"],
+  modules: ["@nuxtjs/supabase", "nuxt-icon"],
   supabase: {
     redirect: false,
-  }
-})
+  },
+});
