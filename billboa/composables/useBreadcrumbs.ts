@@ -1,4 +1,4 @@
-const isMathPatternPath = (pathA: string, pathB: string) => {
+const isMatchPatternPath = (pathA: string, pathB: string) => {
   const partsA = pathA.split("/");
   const partsB = pathB.split("/");
 
@@ -26,7 +26,7 @@ export const useBreadcrumbs = () => {
       currRoute.slice(0, currRoute.lastIndexOf("/")),
     );
 
-    const founds = routes.filter((r) => isMathPatternPath(r.path, currRoute));
+    const founds = routes.filter((r) => isMatchPatternPath(r.path, currRoute));
 
     const matchRoute =
       founds.length > 1 ? founds.find((r) => r.path === currRoute) : founds[0];

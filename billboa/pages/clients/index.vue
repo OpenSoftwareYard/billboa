@@ -16,12 +16,14 @@
                 <div
                   class="col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3"
                 >
-                  <button class="btn btn-primary mb-2">
-                    <Icon name="dashicons:plus-alt2" /><span
-                      class="btn-text-inner"
-                      >New client</span
-                    >
-                  </button>
+                  <NuxtLink to="/clients/create">
+                    <button class="btn btn-primary mb-2">
+                      <Icon name="dashicons:plus-alt2" /><span
+                        class="btn-text-inner"
+                        >New client</span
+                      >
+                    </button>
+                  </NuxtLink>
                 </div>
               </div>
             </div>
@@ -39,7 +41,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="client in clients">
+                  <tr
+                    v-for="client in clients"
+                    @click="navigateToClient(client.id)"
+                  >
                     <td class="checkbox-column">{{ client.id }}</td>
                     <td>{{ client.name }}</td>
                     <td>{{ client.country }}</td>
@@ -57,9 +62,14 @@
 
 <script setup lang="ts">
 const supabase = useSupabaseClient<Database>();
+const router = useRouter();
 
 const { data: clients } = await useAsyncData("clients", async () => {
   const { data } = await supabase.from("clients").select("*");
   return data;
 });
+
+async function navigateToClient(clientId: number) {
+  await router.push(`/clients/${clientId}`);
+}
 </script>
