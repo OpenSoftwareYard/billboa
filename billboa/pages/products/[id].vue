@@ -8,7 +8,7 @@ const route = useRoute();
 const supabase = useSupabaseClient<Database>();
 
 const { data } = await supabase
-  .from("clients")
+  .from("products")
   .select("*")
   .eq("id", route.params.id)
   .single();

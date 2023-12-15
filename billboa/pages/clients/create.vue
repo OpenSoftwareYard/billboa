@@ -87,7 +87,7 @@
 </template>
 
 <script setup lang="ts">
-const { currentCompany } = useCurrentCompany();
+const { currentCompany } = await useCurrentCompany();
 const supabase = useSupabaseClient<Database>();
 const router = useRouter();
 

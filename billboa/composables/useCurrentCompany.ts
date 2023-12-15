@@ -1,10 +1,10 @@
-export const useCurrentCompany = () => {
+export const useCurrentCompany = async () => {
   const supabase = useSupabaseClient<Database>();
 
   const currentCompany =
     ref<Database["public"]["Tables"]["companies"]["Row"]>();
 
-  const getCurrentCompany = async () => {
+  const { data } = await useAsyncData("companies", async () => {
     const { data, error } = await supabase
       .from("companies")
       .select("*")
@@ -14,10 +14,10 @@ export const useCurrentCompany = () => {
       throw error;
     }
 
-    currentCompany.value = data;
-  };
+    return data;
+  });
 
-  getCurrentCompany();
+  currentCompany.value = data.value!;
 
   return {
     currentCompany,

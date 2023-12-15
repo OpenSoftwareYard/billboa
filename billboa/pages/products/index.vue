@@ -16,11 +16,11 @@
                 <div
                   class="col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3"
                 >
-                  <NuxtLink to="/clients/create">
+                  <NuxtLink to="/products/create">
                     <button class="btn btn-primary mb-2">
                       <Icon name="dashicons:plus-alt2" /><span
                         class="btn-text-inner"
-                        >New client</span
+                        >New product</span
                       >
                     </button>
                   </NuxtLink>
@@ -36,19 +36,21 @@
                   <tr>
                     <th class="checkbox-column">Record no.</th>
                     <th>Name</th>
-                    <th>Country</th>
-                    <th>Company number</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Currency</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    v-for="client in clients"
-                    @click="navigateToClient(client.id)"
+                    v-for="product in products"
+                    @click="navigateToClient(product.id)"
                   >
-                    <td class="checkbox-column">{{ client.id }}</td>
-                    <td>{{ client.name }}</td>
-                    <td>{{ client.country }}</td>
-                    <td>{{ client.company_number }}</td>
+                    <td class="checkbox-column">{{ product.id }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.currency }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -64,17 +66,12 @@
 const supabase = useSupabaseClient<Database>();
 const router = useRouter();
 
-const { data: clients } = await useAsyncData("clients", async () => {
-  const { currentCompany } = await useCurrentCompany();
-
-  const { data } = await supabase
-    .from("clients")
-    .select("*")
-    .eq("company_id", currentCompany.value!.id);
+const { data: products } = await useAsyncData("products", async () => {
+  const { data } = await supabase.from("products").select("*");
   return data;
 });
 
 async function navigateToClient(clientId: number) {
-  await router.push(`/clients/${clientId}`);
+  await router.push(`/products/${clientId}`);
 }
 </script>
