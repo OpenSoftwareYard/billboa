@@ -5,55 +5,17 @@
     >
       <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area br-8">
-          <div
-            class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer"
-          >
-            <div class="dt--top-section">
-              <div class="row">
-                <div
-                  class="col-12 col-sm-6 d-flex justify-content-sm-start justify-content-center"
-                ></div>
-                <div
-                  class="col-12 col-sm-6 d-flex justify-content-sm-end justify-content-center mt-sm-0 mt-3"
-                >
-                  <NuxtLink to="/clients/create">
-                    <button class="btn btn-primary mb-2">
-                      <Icon name="dashicons:plus-alt2" /><span
-                        class="btn-text-inner"
-                        >New client</span
-                      >
-                    </button>
-                  </NuxtLink>
-                </div>
-              </div>
-            </div>
-            <div class="table-responsive">
-              <table
-                class="table table-hover table-bordered"
-                style="width: 100%"
-              >
-                <thead>
-                  <tr>
-                    <th class="checkbox-column">Record no.</th>
-                    <th>Name</th>
-                    <th>Country</th>
-                    <th>Company number</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="client in clients"
-                    @click="navigateToClient(client.id)"
-                  >
-                    <td class="checkbox-column">{{ client.id }}</td>
-                    <td>{{ client.name }}</td>
-                    <td>{{ client.country }}</td>
-                    <td>{{ client.company_number }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
+          <DataTable
+            :data="clients"
+            :columns="[
+              { name: 'name', label: 'Name' },
+              { name: 'country', label: 'Country' },
+              { name: 'company_number', label: 'Company number' },
+            ]"
+            :idColumn="{ name: 'id', label: 'Record no.' }"
+            :newEntry="{ route: '/clients/create', label: 'New client' }"
+            @rowClicked="navigateToClient"
+          />
         </div>
       </div>
     </div>
@@ -74,7 +36,7 @@ const { data: clients } = await useAsyncData("clients", async () => {
   return data;
 });
 
-async function navigateToClient(clientId: number) {
+async function navigateToClient(clientId: string) {
   await router.push(`/clients/${clientId}`);
 }
 </script>
