@@ -1,6 +1,13 @@
 <template>
   <div class="custom-select" :tabindex="tabindex" @blur="open = false">
-    <div class="selected" :class="{ open: open }" @click="open = !open">
+    <div
+      class="selected"
+      :class="{ open: open }"
+      @click="
+        open = !open;
+        $emit('open', open);
+      "
+    >
       {{ selected }}
     </div>
     <div class="items" :class="{ selectHide: !open }">
@@ -28,6 +35,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: "input", value: string | null): void;
+  (e: "open", value: boolean): void;
 }>();
 
 const selected = ref<string | null>(null);

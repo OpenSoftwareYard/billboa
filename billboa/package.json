@@ -21,6 +21,7 @@
   "dependencies": {
     "@nuxtjs/supabase": "^1.1.4",
     "@supabase/supabase-js": "^2.39.0",
-    "bootstrap": "^5.3.2"
+    "bootstrap": "^5.3.2",
+    "vue-flatpickr-component": "^11"
   }
 }

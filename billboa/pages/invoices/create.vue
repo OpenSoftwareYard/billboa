@@ -1,73 +1,92 @@
 <template>
   <div class="row">
-    <div class="col-xl-4 col-lg-4 col-sm-12 layout-top-spacing">
+    <div class="col-xl-6 col-lg-6 col-sm-12 layout-top-spacing">
+      <div class="statbox widget box box-shadow">
+        <div class="widget-content widget-content-area br-8">
+          <div class="w-header">Basic details</div>
+          <div class="form-group">
+            <label for="invoiceNumber" class="form-label">Invoice Number</label>
+            <input
+              type="text"
+              class="form-control"
+              id="invoiceNumber"
+              v-model="state.invoiceNumber"
+            />
+          </div>
+          <div class="form-group">
+            <label for="invoiceDate" class="form-label">Invoice Date</label>
+            <flat-pickr
+              v-model="state.invoiceDate"
+              class="form-control"
+              id="invoiceDate"
+            />
+          </div>
+          <div class="form-group">
+            <label for="dueDate" class="form-label">Due Date</label>
+            <flat-pickr
+              v-model="state.dueDate"
+              class="form-control"
+              id="dueDate"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-sm-12 layout-top-spacing">
       <div class="statbox widget box box-shadow">
         <div class="widget-content widget-content-area br-8">
           <div class="w-header">Client</div>
           <BBSelect
-            :options="[
-              'Thomas Edison',
-              'Nikola Tesla',
-              'Arnold Schwarzenegger',
-            ]"
-            :default="'Thomas Edison'"
+            :options="
+              clients.map((client) => {
+                return client.name;
+              })
+            "
+            :default="clients[0]?.name"
+            @open="getClients"
+            @input="
+              state.client =
+                clients.find((client) => {
+                  return client.name === $event;
+                }) || emptyClient
+            "
           />
         </div>
       </div>
     </div>
   </div>
-  <div class="row" id="cancel-row">
-    <div
-      class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing layout-spacing"
-    >
-      <div class="statbox widget box box-shadow">
+  <div class="row">
+    <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing">
+      <div class="widget box box-shadow">
         <div class="widget-content widget-content-area br-8">
-          <div class="w-header">Product details</div>
-          <form class="row g-3 mt-2" @submit.prevent="submit">
-            <div class="col-md-12">
-              <label for="inputName" class="form-label">Name</label>
-              <input
-                type="text"
-                class="form-control"
-                id="inputName"
-                v-model="state.name"
-              />
-            </div>
-            <div class="col-12">
-              <label for="inputDescriptions" class="form-label"
-                >Description</label
+          <div
+            class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer"
+          >
+            <div class="w-header">Items</div>
+            <div class="table-responsive">
+              <table
+                class="table table-hover dataTable no-footer"
+                style="width: 100%"
               >
-              <input
-                type="text"
-                class="form-control"
-                id="inputDescription"
-                placeholder="1234 Main St"
-                v-model="state.description"
-              />
+                <thead>
+                  <tr role="row">
+                    <th rowspan="1" colspan="1">Name</th>
+                    <th rowspan="1" colspan="1">Description</th>
+                    <th rowspan="1" colspan="1">Price</th>
+                    <th rowspan="1" colspan="1">Quantity</th>
+                    <th rowspan="1" colspan="1">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr rolw="row">
+                    <th rowspan="1" colspan="5" class="text-center">
+                      <Icon name="dashicons:plus-alt2" />Add item
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-            <div class="col-md-4">
-              <label for="inputPrice" class="form-label">Price</label>
-              <input
-                type="text"
-                class="form-control"
-                id="inputPrice"
-                v-model="state.price"
-              />
-            </div>
-            <div class="col-md-4">
-              <label for="inputCurrency" class="form-label">Currency</label>
-              <input
-                type="text"
-                id="inputCurrency"
-                class="form-control"
-                v-model="state.currency"
-              />
-            </div>
-
-            <div class="col-12">
-              <button type="submit" class="btn btn-primary">Create</button>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
@@ -75,35 +94,51 @@
 </template>
 
 <script setup lang="ts">
+import flatPickr from "vue-flatpickr-component";
+import "flatpickr/dist/flatpickr.css";
+
 const { currentCompany } = await useCurrentCompany();
 const supabase = useSupabaseClient<Database>();
 const router = useRouter();
 
+const emptyClient = {
+  address: "",
+  city: "",
+  company_id: 0,
+  country: "",
+  created_at: "",
+  id: -1,
+  name: "Select Client",
+  state: "",
+  updated_at: "",
+  vat_number: "",
+  company_number: "",
+};
+const clients = ref<Database["public"]["Tables"]["clients"]["Row"][]>([
+  emptyClient,
+]);
+
+const invoiceDate = ref<Date>(new Date());
+const dueDate = ref<Date>(new Date());
+
 const state = reactive({
-  name: "",
-  description: "",
-  price: "",
-  currency: "",
+  invoiceNumber: "",
+  invoiceDate: new Date(),
+  dueDate: new Date(),
+  client: emptyClient,
 });
 
-async function submit() {
-  if (currentCompany.value === null) {
-    throw new Error("No company selected");
-  }
-
-  const { error } = await supabase.from("products").insert({
-    name: state.name,
-    description: state.description,
-    price: Number(state.price),
-    currency: state.currency,
-    company_id: currentCompany.value!.id,
-  });
+async function getClients() {
+  const { data, error } = await supabase
+    .from("clients")
+    .select("*")
+    .eq("company_id", currentCompany.value!.id);
 
   if (error) {
     console.error(error);
     throw error;
   }
 
-  router.push("/products");
+  clients.value = data!;
 }
 </script>
