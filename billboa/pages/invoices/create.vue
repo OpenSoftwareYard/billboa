@@ -1,90 +1,211 @@
 <template>
   <div class="row">
-    <div class="col-xl-6 col-lg-6 col-sm-12 layout-top-spacing">
-      <div class="statbox widget box box-shadow">
-        <div class="widget-content widget-content-area br-8">
-          <div class="w-header">Basic details</div>
-          <div class="form-group">
-            <label for="invoiceNumber" class="form-label">Invoice Number</label>
-            <input
-              type="text"
-              class="form-control"
-              id="invoiceNumber"
-              v-model="state.invoiceNumber"
-            />
+    <div class="col-xl-9 layout-top-spacing">
+      <div class="row">
+        <div class="col-xl-6 col-lg-6 col-sm-12 layout-top-spacing">
+          <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area br-8">
+              <div class="w-header">Basic details</div>
+              <div class="form-group">
+                <label for="invoiceNumber" class="form-label"
+                  >Invoice Number</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="invoiceNumber"
+                  v-model="state.invoiceNumber"
+                />
+              </div>
+              <div class="form-group">
+                <label for="invoiceDate" class="form-label">Invoice Date</label>
+                <flat-pickr
+                  v-model="state.invoiceDate"
+                  class="form-control"
+                  id="invoiceDate"
+                />
+              </div>
+              <div class="form-group">
+                <label for="dueDate" class="form-label">Due Date</label>
+                <flat-pickr
+                  v-model="state.dueDate"
+                  class="form-control"
+                  id="dueDate"
+                />
+              </div>
+            </div>
           </div>
-          <div class="form-group">
-            <label for="invoiceDate" class="form-label">Invoice Date</label>
-            <flat-pickr
-              v-model="state.invoiceDate"
-              class="form-control"
-              id="invoiceDate"
-            />
-          </div>
-          <div class="form-group">
-            <label for="dueDate" class="form-label">Due Date</label>
-            <flat-pickr
-              v-model="state.dueDate"
-              class="form-control"
-              id="dueDate"
-            />
+        </div>
+        <div class="col-xl-6 col-lg-6 col-sm-12 layout-top-spacing">
+          <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area br-8">
+              <div class="w-header">Client</div>
+              <BBSelect
+                :options="
+                  clients.map((client) => {
+                    return client.name;
+                  })
+                "
+                :default="clients[0]?.name"
+                @open="getClients"
+                @input="
+                  state.client =
+                    clients.find((client) => {
+                      return client.name === $event;
+                    }) || emptyClient
+                "
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="col-xl-6 col-lg-6 col-sm-12 layout-top-spacing">
-      <div class="statbox widget box box-shadow">
-        <div class="widget-content widget-content-area br-8">
-          <div class="w-header">Client</div>
-          <BBSelect
-            :options="
-              clients.map((client) => {
-                return client.name;
-              })
-            "
-            :default="clients[0]?.name"
-            @open="getClients"
-            @input="
-              state.client =
-                clients.find((client) => {
-                  return client.name === $event;
-                }) || emptyClient
-            "
-          />
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing">
-      <div class="widget box box-shadow">
-        <div class="widget-content widget-content-area br-8">
-          <div
-            class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer"
-          >
-            <div class="w-header">Items</div>
-            <div class="table-responsive">
-              <table
-                class="table table-hover dataTable no-footer"
-                style="width: 100%"
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing">
+          <div class="widget box box-shadow">
+            <div class="widget-content widget-content-area br-8">
+              <div
+                class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer"
               >
-                <thead>
-                  <tr role="row">
-                    <th rowspan="1" colspan="1">Name</th>
-                    <th rowspan="1" colspan="1">Description</th>
-                    <th rowspan="1" colspan="1">Price</th>
-                    <th rowspan="1" colspan="1">Quantity</th>
-                    <th rowspan="1" colspan="1">Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr rolw="row">
-                    <th rowspan="1" colspan="5" class="text-center">
-                      <Icon name="dashicons:plus-alt2" />Add item
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
+                <div class="w-header">Items</div>
+                <div class="table-responsive">
+                  <table
+                    class="table table-hover dataTable no-footer"
+                    style="width: 100%"
+                  >
+                    <thead>
+                      <tr role="row">
+                        <th rowspan="1" colspan="1">Name</th>
+                        <th rowspan="1" colspan="1">Description</th>
+                        <th rowspan="1" colspan="1">Price</th>
+                        <th rowspan="1" colspan="1">Quantity</th>
+                        <th rowspan="1" colspan="1">Total</th>
+                        <th rowspan="1" colspan="1">Currency</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr role="row" v-for="productRow in productRows">
+                        <td>
+                          <input
+                            type="text"
+                            class="form-control"
+                            v-model="productRow.product.name"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            class="form-control"
+                            v-model="productRow.product.description"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            class="form-control"
+                            v-model="productRow.product.price"
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            class="form-control"
+                            v-model="productRow.quantity"
+                          />
+                        </td>
+                        <td>
+                          {{ productRow.product.price * productRow.quantity }}
+                        </td>
+                        <td>
+                          <BBSelect
+                            :options="['EUR', 'USD']"
+                            :default="productRow.product.currency"
+                            @input="productRow.product.currency = $event"
+                          />
+                        </td>
+                      </tr>
+                      <tr rolw="row" @click="addProductRow">
+                        <th rowspan="1" colspan="6" class="text-center">
+                          <Icon name="dashicons:plus-alt2" />Add item
+                        </th>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-8 col-lg-8 col-sm-12 layout-top-spacing">
+          <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area br-8">
+              <div class="w-header">Notes</div>
+              <textarea class="form-control" rows="5"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-4 col-lg-4 col-sm-12 layout-top-spacing">
+          <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area br-8">
+              <div class="w-header">Totals</div>
+              <div class="totals-row">
+                <div class="invoice-totals-row invoice-summary-subtotal">
+                  <div class="invoice-summary-label">Subtotal</div>
+                  <div class="invoice-summary-value">
+                    <div class="subtotal-amount">
+                      <span class="amount">
+                        {{
+                          productRows.reduce((curr, prev) => {
+                            return curr + prev.product.price * prev.quantity;
+                          }, 0)
+                        }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="invoice-totals-row invoice-summary-total">
+                  <div class="invoice-summary-label">Discount</div>
+                  <div class="invoice-summary-value">0.0</div>
+                </div>
+                <div class="invoice-totals-row invoice-summary-tax">
+                  <div class="invoice-summary-label">Tax</div>
+                  <div class="invoice-summary-value">0.0</div>
+                </div>
+                <div class="invoice-totals-row invoice-summary-balance-due">
+                  <div class="invoice-summary-label">Total</div>
+                  <div class="invoice-summary-value">
+                    {{
+                      productRows.reduce((curr, prev) => {
+                        return curr + prev.product.price * prev.quantity;
+                      }, 0)
+                    }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-3 layout-top-spacing">
+      <div class="row">
+        <div class="col-xl-12 layout-top-spacing">
+          <div class="statbox widget box box-shadow">
+            <div class="widget-content widget-content-area br-8">
+              <div class="col-xl-12 col-md-4">
+                <button
+                  class="btn btn-primary"
+                  style="width: 100%; margin-bottom: 20px"
+                >
+                  Save
+                </button>
+              </div>
+              <div class="col-xl-12 col-md-4">
+                <button class="btn btn-secondary" style="width: 100%">
+                  Preview
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -96,6 +217,7 @@
 <script setup lang="ts">
 import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
+import "assets/apps/invoice-add.scss";
 
 const { currentCompany } = await useCurrentCompany();
 const supabase = useSupabaseClient<Database>();
@@ -118,8 +240,12 @@ const clients = ref<Database["public"]["Tables"]["clients"]["Row"][]>([
   emptyClient,
 ]);
 
-const invoiceDate = ref<Date>(new Date());
-const dueDate = ref<Date>(new Date());
+type ProductRow = {
+  product: Database["public"]["Tables"]["products"]["Row"];
+  quantity: number;
+};
+
+const productRows = ref<ProductRow[]>([]);
 
 const state = reactive({
   invoiceNumber: "",
@@ -140,5 +266,21 @@ async function getClients() {
   }
 
   clients.value = data!;
+}
+
+async function addProductRow() {
+  productRows.value.push({
+    product: {
+      id: -1,
+      name: "",
+      description: "",
+      price: 0,
+      company_id: currentCompany.value!.id,
+      created_at: "",
+      updated_at: "",
+      currency: "EUR",
+    },
+    quantity: 0,
+  });
 }
 </script>
