@@ -1,6 +1,7 @@
 <template>
   {{ $route.params.id }}
   {{ data?.total_amount }}
+  {{ data?.products }}
 </template>
 
 <script setup lang="ts">
@@ -9,7 +10,13 @@ const supabase = useSupabaseClient<Database>();
 
 const { data } = await supabase
   .from("invoices")
-  .select("*")
-  .eq("id", route.params.id)
+  .select(
+    `*,
+    products (
+      name
+    )
+  `,
+  )
+  .eq("invoice_number", route.params.id)
   .single();
 </script>

@@ -25,9 +25,9 @@ create table products (
 );
 
 create table invoices_products (
-  id bigint primary key generated always as identity,
   invoice_id bigint not null references invoices(id),
   product_id bigint not null references products(id),
+  primary key (invoice_id, product_id),
   quantity numeric(10,2) not null,
   created_at timestamp with time zone not null default now(),
   updated_at timestamp with time zone not null default now()

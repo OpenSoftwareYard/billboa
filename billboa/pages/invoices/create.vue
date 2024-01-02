@@ -2,59 +2,80 @@
   <div class="row">
     <div class="col-xl-9 layout-top-spacing">
       <div class="row">
-        <div class="col-xl-6 col-lg-6 col-sm-12 layout-top-spacing">
+        <div class="col-xl-12 col-lg-12 col-sm-12 layout-top-spacing">
           <div class="statbox widget box box-shadow">
             <div class="widget-content widget-content-area br-8">
               <div class="w-header">Basic details</div>
-              <div class="form-group">
-                <label for="invoiceNumber" class="form-label"
-                  >Invoice Number</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="invoiceNumber"
-                  v-model="state.invoiceNumber"
-                />
+              <div class="row">
+                <div class="col-lg-4 col-sm-12">
+                  <div class="form-group">
+                    <label for="invoiceNumber" class="form-label"
+                      >Invoice Number</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="invoiceNumber"
+                      v-model="state.invoiceNumber"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-12">
+                  <div class="form-group">
+                    <label for="client" class="form-label">Client</label>
+                    <BBSelect
+                      :options="
+                        clients.map((client) => {
+                          return client.name;
+                        })
+                      "
+                      :default="clients[0]?.name"
+                      @open="getClients"
+                      @input="
+                        state.client =
+                          clients.find((client) => {
+                            return client.name === $event;
+                          }) || emptyClient
+                      "
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-4 col-sm-12">
+                  <div class="form-group">
+                    <label for="currency" class="form-label">Currency</label>
+                    <BBSelect
+                      :options="['RON', 'EUR', 'USD']"
+                      default="RON"
+                      @input="state.currency = $event"
+                    />
+                  </div>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="invoiceDate" class="form-label">Invoice Date</label>
-                <flat-pickr
-                  v-model="state.invoiceDate"
-                  class="form-control"
-                  id="invoiceDate"
-                />
+
+              <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                  <div class="form-group">
+                    <label for="invoiceDate" class="form-label"
+                      >Invoice Date</label
+                    >
+                    <flat-pickr
+                      v-model="state.invoiceDate"
+                      class="form-control"
+                      id="invoiceDate"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6 col-sm-12">
+                  <div class="form-group">
+                    <label for="dueDate" class="form-label">Due Date</label>
+                    <flat-pickr
+                      v-model="state.dueDate"
+                      class="form-control"
+                      id="dueDate"
+                    />
+                  </div>
+                </div>
               </div>
-              <div class="form-group">
-                <label for="dueDate" class="form-label">Due Date</label>
-                <flat-pickr
-                  v-model="state.dueDate"
-                  class="form-control"
-                  id="dueDate"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-6 col-lg-6 col-sm-12 layout-top-spacing">
-          <div class="statbox widget box box-shadow">
-            <div class="widget-content widget-content-area br-8">
-              <div class="w-header">Client</div>
-              <BBSelect
-                :options="
-                  clients.map((client) => {
-                    return client.name;
-                  })
-                "
-                :default="clients[0]?.name"
-                @open="getClients"
-                @input="
-                  state.client =
-                    clients.find((client) => {
-                      return client.name === $event;
-                    }) || emptyClient
-                "
-              />
             </div>
           </div>
         </div>
@@ -80,6 +101,7 @@
                         <th rowspan="1" colspan="1">Quantity</th>
                         <th rowspan="1" colspan="1">Total</th>
                         <th rowspan="1" colspan="1">Currency</th>
+                        <th rowspan="1" colspan="1"></th>
                       </tr>
                     </thead>
                     <tbody>
@@ -113,7 +135,11 @@
                           />
                         </td>
                         <td>
-                          {{ productRow.product.price * productRow.quantity }}
+                          {{
+                            (
+                              productRow.product.price * productRow.quantity
+                            ).toLocaleString()
+                          }}
                         </td>
                         <td>
                           <BBSelect
@@ -122,9 +148,20 @@
                             @input="productRow.product.currency = $event"
                           />
                         </td>
+                        <td>
+                          <Icon
+                            name="dashicons:trash"
+                            @click="
+                              productRows.splice(
+                                productRows.indexOf(productRow),
+                                1,
+                              )
+                            "
+                          />
+                        </td>
                       </tr>
                       <tr rolw="row" @click="addProductRow">
-                        <th rowspan="1" colspan="6" class="text-center">
+                        <th rowspan="1" colspan="7" class="text-center">
                           <Icon name="dashicons:plus-alt2" />Add item
                         </th>
                       </tr>
@@ -155,11 +192,7 @@
                   <div class="invoice-summary-value">
                     <div class="subtotal-amount">
                       <span class="amount">
-                        {{
-                          productRows.reduce((curr, prev) => {
-                            return curr + prev.product.price * prev.quantity;
-                          }, 0)
-                        }}
+                        {{ state.totalValue.toLocaleString() }}
                       </span>
                     </div>
                   </div>
@@ -175,11 +208,7 @@
                 <div class="invoice-totals-row invoice-summary-balance-due">
                   <div class="invoice-summary-label">Total</div>
                   <div class="invoice-summary-value">
-                    {{
-                      productRows.reduce((curr, prev) => {
-                        return curr + prev.product.price * prev.quantity;
-                      }, 0)
-                    }}
+                    {{ state.totalValue.toLocaleString() }}
                   </div>
                 </div>
               </div>
@@ -197,6 +226,7 @@
                 <button
                   class="btn btn-primary"
                   style="width: 100%; margin-bottom: 20px"
+                  @click="saveInvoice"
                 >
                   Save
                 </button>
@@ -236,6 +266,7 @@ const emptyClient = {
   vat_number: "",
   company_number: "",
 };
+
 const clients = ref<Database["public"]["Tables"]["clients"]["Row"][]>([
   emptyClient,
 ]);
@@ -249,9 +280,17 @@ const productRows = ref<ProductRow[]>([]);
 
 const state = reactive({
   invoiceNumber: "",
-  invoiceDate: new Date(),
-  dueDate: new Date(),
+  currency: "",
+  invoiceDate: "",
+  totalValue: 0,
+  dueDate: "",
   client: emptyClient,
+});
+
+watch(productRows.value, (newVal) => {
+  state.totalValue = newVal.reduce((curr, prev) => {
+    return curr + prev.product.price * prev.quantity;
+  }, 0);
 });
 
 async function getClients() {
@@ -282,5 +321,68 @@ async function addProductRow() {
     },
     quantity: 0,
   });
+}
+
+async function saveInvoice() {
+  const { data, error } = await supabase
+    .from("invoices")
+    .insert([
+      {
+        invoice_number: state.invoiceNumber,
+        currency: state.currency,
+        date: state.invoiceDate,
+        due_date: state.dueDate,
+        client_id: state.client.id,
+        company_id: currentCompany.value!.id,
+        status: "draft",
+        total_amount: state.totalValue,
+      },
+    ])
+    .select();
+
+  if (error) {
+    console.error(error);
+    throw error;
+  }
+
+  const invoiceId = data![0].id;
+
+  const { data: productData, error: productError } = await supabase
+    .from("products")
+    .insert(
+      productRows.value.map((productRow) => {
+        return {
+          name: productRow.product.name,
+          description: productRow.product.description,
+          price: productRow.product.price,
+          currency: productRow.product.currency,
+          company_id: currentCompany.value!.id,
+        };
+      }),
+    )
+    .select();
+
+  if (productError) {
+    console.error(productError);
+    throw productError;
+  }
+
+  const { data: invoiceProductData, error: invoiceProductError } =
+    await supabase.from("invoices_products").insert(
+      productData!.map((product, index) => {
+        return {
+          invoice_id: invoiceId,
+          product_id: product.id,
+          quantity: productRows.value[index].quantity,
+        };
+      }),
+    );
+
+  if (invoiceProductError) {
+    console.error(invoiceProductError);
+    throw invoiceProductError;
+  }
+
+  router.push("/invoices");
 }
 </script>
