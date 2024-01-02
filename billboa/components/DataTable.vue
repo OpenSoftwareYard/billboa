@@ -24,6 +24,7 @@
           <tr>
             <th class="checkbox-column">{{ idColumn.label }}</th>
             <th v-for="column in columns">{{ column.label }}</th>
+            <th v-if="actions">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -36,6 +37,29 @@
             </td>
             <td v-for="column in columns">
               {{ valueForKey(entry, column.name) }}
+            </td>
+            <td class="text-center" @click.stop v-if="actions">
+              <div class="btn-group" role="group">
+                <button
+                  id="btndefault"
+                  type="button"
+                  class="btn btn-outline-primary btn-icon dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
+                  <Icon name="dashicons:arrow-down-alt2" />
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btndefault">
+                  <a
+                    class="dropdown-item"
+                    v-for="action in actions"
+                    @click="action.action(valueForKey(entry, idColumn.name))"
+                    ><Icon :name="action.icon" v-if="action.icon" />
+                    {{ action.label }}</a
+                  >
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>
@@ -59,6 +83,11 @@ const props = defineProps<{
     route: string;
     label: string;
   };
+  actions?: {
+    label: string;
+    icon?: string;
+    action: (id: string) => void;
+  }[];
 }>();
 
 const emit = defineEmits<{

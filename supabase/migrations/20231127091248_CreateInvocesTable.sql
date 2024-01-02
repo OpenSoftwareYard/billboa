@@ -25,8 +25,8 @@ create table products (
 );
 
 create table invoices_products (
-  invoice_id bigint not null references invoices(id),
-  product_id bigint not null references products(id),
+  invoice_id bigint not null references invoices(id) on delete cascade,
+  product_id bigint not null references products(id) on delete cascade,
   primary key (invoice_id, product_id),
   quantity numeric(10,2) not null,
   created_at timestamp with time zone not null default now(),
