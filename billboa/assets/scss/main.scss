@@ -1,0 +1,11 @@
+@import "node_modules/bootstrap/scss/_functions";
+@import "node_modules/bootstrap/scss/_variables";
+@import "node_modules/bootstrap/scss/_mixins";
+
+// Finally load bootstrap
+@import "node_modules/bootstrap/scss/bootstrap";
+
+@import "loader";
+@import "structure";
+@import "theme_main";
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,600,700");
