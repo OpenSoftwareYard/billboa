@@ -1,8 +1,9 @@
 export const useCurrentCompany = async () => {
   const supabase = useSupabaseClient<Database>();
 
-  const currentCompany =
-    ref<Database["public"]["Tables"]["companies"]["Row"]>();
+  const currentCompany = ref<
+    Database["public"]["Tables"]["companies"]["Row"] | null
+  >();
 
   const { data } = await useAsyncData("companies", async () => {
     const { data, error } = await supabase
@@ -17,7 +18,7 @@ export const useCurrentCompany = async () => {
     return data;
   });
 
-  currentCompany.value = data.value!;
+  currentCompany.value = data.value;
 
   return {
     currentCompany,

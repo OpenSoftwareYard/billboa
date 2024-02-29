@@ -36,6 +36,15 @@
         </div>
       </NuxtLink>
     </li>
+
+    <li :class="routeClass('settings')">
+      <NuxtLink to="/settings" class="dropdown-toggle">
+        <div class="">
+          <Icon name="dashicons:admin-settings" />
+          <span>Settings</span>
+        </div>
+      </NuxtLink>
+    </li>
   </ul>
 </template>
 
