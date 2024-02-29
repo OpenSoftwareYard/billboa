@@ -9,7 +9,7 @@
           <div class="auth-overlay"></div>
           <div class="auth-cover">
             <div class="position-relative">
-              <img src="../src/assets/img/auth-cover.svg" alt="auth-img" />
+              <img src="" alt="auth-img" />
               <h2 class="mt-5 text-white font-weight-bolder px-2">
                 Join the community of expert developers
               </h2>
