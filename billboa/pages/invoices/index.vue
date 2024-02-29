@@ -117,6 +117,10 @@ const supabase = useSupabaseClient<Database>();
 const router = useRouter();
 const config = useRuntimeConfig();
 
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const shouldRefreshData = ref(false);
 const state = reactive({
   deleteItemModal: null as bootstrap.Modal | null,

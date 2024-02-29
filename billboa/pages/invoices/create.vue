@@ -249,6 +249,10 @@ import flatPickr from "vue-flatpickr-component";
 import "flatpickr/dist/flatpickr.css";
 import "assets/apps/invoice-add.scss";
 
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const { currentCompany } = await useCurrentCompany();
 const supabase = useSupabaseClient<Database>();
 const router = useRouter();

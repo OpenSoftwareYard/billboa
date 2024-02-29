@@ -7,6 +7,10 @@
 const route = useRoute();
 const supabase = useSupabaseClient<Database>();
 
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const { data } = await supabase
   .from("products")
   .select("*")

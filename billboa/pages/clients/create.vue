@@ -91,6 +91,10 @@ const { currentCompany } = await useCurrentCompany();
 const supabase = useSupabaseClient<Database>();
 const router = useRouter();
 
+definePageMeta({
+  middleware: ["auth"],
+});
+
 const state = reactive({
   name: "",
   address: "",

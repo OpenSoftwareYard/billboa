@@ -50,4 +50,8 @@
 
 <script setup lang="ts">
 const { breadcrumbs } = useBreadcrumbs();
+
+definePageMeta({
+  middleware: ["auth"],
+});
 </script>
