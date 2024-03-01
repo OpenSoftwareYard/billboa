@@ -3,11 +3,11 @@ import puppeteer from "npm:puppeteer-core@21.6.1";
 import { HandlebarsJS } from "https://deno.land/x/handlebars@v0.10.0/mod.ts";
 import moment from "npm:moment@2.29.1";
 
-import { corsHeaders } from '../_shared/cors.ts'
+import { corsHeaders } from "../_shared/cors.ts";
 
 Deno.serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
   }
 
   const IS_PRODUCTION = Deno.env.get("ENVIRONMENT") === "production";
@@ -21,22 +21,6 @@ Deno.serve(async (req) => {
       },
     },
   );
-
-  const { data: _invoiceBucket, error: invoiceBucketError } =
-    await supabaseClient.storage.getBucket("invoices");
-
-  if (invoiceBucketError) {
-    const createBucketRes = await supabaseClient.storage.createBucket(
-      "invoices",
-      {
-        public: false,
-      },
-    );
-
-    if (createBucketRes.error) {
-      throw createBucketRes.error;
-    }
-  }
 
   const { invoice_number } = await req.json();
 
@@ -112,10 +96,12 @@ Deno.serve(async (req) => {
     printBackground: true,
   });
 
+  const invoicePath = `${invoice.companies.id}/${invoiceDocumentName}.pdf`;
+
   const { data: _uploadPdfData, error: uploadPdfError } = await supabaseClient
     .storage
     .from("invoices")
-    .upload(`${invoiceDocumentName}.pdf`, pdf, {
+    .upload(invoicePath, pdf, {
       contentType: "application/pdf",
       upsert: false,
     });
@@ -126,7 +112,7 @@ Deno.serve(async (req) => {
 
   const { data: pdfUrl, error: pdfUrlError } = await supabaseClient.storage
     .from("invoices")
-    .createSignedUrl(`${invoiceDocumentName}.pdf`, 120);
+    .createSignedUrl(invoicePath, 120);
 
   if (pdfUrlError) {
     throw pdfUrlError;
