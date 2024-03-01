@@ -13,7 +13,7 @@
     "files.exclude": {
       "supabase/functions/": true
     },
-    "deno.enable": false,
+    "deno.enable": true,
     "deno.lint": true,
     "deno.unstable": true
   }

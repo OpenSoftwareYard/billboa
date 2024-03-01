@@ -1,4 +1,4 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.2";
 import puppeteer from "npm:puppeteer-core@21.6.1";
 import { HandlebarsJS } from "https://deno.land/x/handlebars@v0.10.0/mod.ts";
 import moment from "npm:moment@2.29.1";
