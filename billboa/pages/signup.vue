@@ -97,9 +97,6 @@ async function signUpNewUser() {
   const { data, error } = await supabase.auth.signUp({
     email: newUser.email,
     password: newUser.password,
-    options: {
-      emailRedirectTo: "http://localhost:3000/signin",
-    },
   });
 
   if (error) {
