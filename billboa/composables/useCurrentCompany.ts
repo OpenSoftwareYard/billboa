@@ -9,16 +9,12 @@ export const useCurrentCompany = async () => {
     const { data, error } = await supabase
       .from("companies")
       .select("*")
-      .single();
+      .maybeSingle();
 
-    if (error) {
-      throw error;
-    }
+    currentCompany.value = data;
 
     return data;
   });
-
-  currentCompany.value = data.value;
 
   return {
     currentCompany,

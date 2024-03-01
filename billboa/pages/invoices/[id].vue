@@ -9,7 +9,7 @@ const route = useRoute();
 const supabase = useSupabaseClient<Database>();
 
 definePageMeta({
-  middleware: ["auth"],
+  middleware: ["auth", "has-company"],
 });
 
 const { data } = await supabase

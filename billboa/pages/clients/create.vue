@@ -92,7 +92,7 @@ const supabase = useSupabaseClient<Database>();
 const router = useRouter();
 
 definePageMeta({
-  middleware: ["auth"],
+  middleware: ["auth", "has-company"],
 });
 
 const state = reactive({

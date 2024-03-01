@@ -118,7 +118,7 @@ const router = useRouter();
 const config = useRuntimeConfig();
 
 definePageMeta({
-  middleware: ["auth"],
+  middleware: ["auth", "has-company"],
 });
 
 const shouldRefreshData = ref(false);

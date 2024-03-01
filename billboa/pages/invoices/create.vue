@@ -250,7 +250,7 @@ import "flatpickr/dist/flatpickr.css";
 import "assets/apps/invoice-add.scss";
 
 definePageMeta({
-  middleware: ["auth"],
+  middleware: ["auth", "has-company"],
 });
 
 const { currentCompany } = await useCurrentCompany();

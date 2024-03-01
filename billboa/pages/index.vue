@@ -52,6 +52,6 @@
 const { breadcrumbs } = useBreadcrumbs();
 
 definePageMeta({
-  middleware: ["auth"],
+  middleware: ["auth", "has-company"],
 });
 </script>

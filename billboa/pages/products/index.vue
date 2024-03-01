@@ -28,7 +28,7 @@ const supabase = useSupabaseClient<Database>();
 const router = useRouter();
 
 definePageMeta({
-  middleware: ["auth"],
+  middleware: ["auth", "has-company"],
 });
 
 const { data: products } = await useAsyncData("products", async () => {
