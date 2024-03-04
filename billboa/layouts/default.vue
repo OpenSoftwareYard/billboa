@@ -31,7 +31,7 @@
               <div class="media mx-auto">
                 <div class="emoji me-2">&#x1F44B;</div>
                 <div class="media-body">
-                  <h5>Name goes here</h5>
+                  <h5>{{ user?.email }}</h5>
                 </div>
               </div>
             </div>
@@ -76,6 +76,7 @@
 const { breadcrumbs } = useBreadcrumbs();
 const supabase = useSupabaseClient();
 const router = useRouter();
+const user = useSupabaseUser();
 
 const mainContainerClass = ref("main-container");
 
