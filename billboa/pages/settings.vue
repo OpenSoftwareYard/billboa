@@ -8,7 +8,7 @@
           <div class="w-header">Company details</div>
           <form class="row g-3 mt-2" @submit.prevent="submit">
             <div class="col-md-12">
-              <label for="inputName" class="form-label">Name</label>
+              <label for="inputName" class="form-label">Nume</label>
               <input
                 type="text"
                 class="form-control"
@@ -17,7 +17,7 @@
               />
             </div>
             <div class="col-12">
-              <label for="inputAddress" class="form-label">Address</label>
+              <label for="inputAddress" class="form-label">Adresă</label>
               <input
                 type="text"
                 class="form-control"
@@ -27,7 +27,7 @@
               />
             </div>
             <div class="col-md-4">
-              <label for="inputCity" class="form-label">City</label>
+              <label for="inputCity" class="form-label">Oraș</label>
               <input
                 type="text"
                 class="form-control"
@@ -36,7 +36,7 @@
               />
             </div>
             <div class="col-md-4">
-              <label for="inputState" class="form-label">State</label>
+              <label for="inputState" class="form-label">Județ</label>
               <input
                 type="text"
                 id="inputState"
@@ -45,7 +45,7 @@
               />
             </div>
             <div class="col-md-4">
-              <label for="inputCountry" class="form-label">Country</label>
+              <label for="inputCountry" class="form-label">Țară</label>
               <input
                 type="text"
                 id="inputCountry"
@@ -55,7 +55,7 @@
             </div>
             <div class="col-md-4">
               <label for="inputCompanyNumber" class="form-label"
-                >Company Number</label
+                >Nr. reg. comerțului</label
               >
               <input
                 type="text"
@@ -65,12 +65,43 @@
               />
             </div>
             <div class="col-md-4">
-              <label for="inputVATNumber" class="form-label">VAT Number</label>
+              <label for="inputVATNumber" class="form-label"
+                >Cod TVA / CUI</label
+              >
               <input
                 type="text"
                 id="inputVATNumber"
                 class="form-control"
                 v-model="state.vatNumber"
+              />
+            </div>
+            <div class="col-md-4">
+              <label for="inputShareValue" class="form-label"
+                >Capital social</label
+              >
+              <input
+                type="text"
+                id="inputShareValue"
+                class="form-control"
+                v-model="state.shareValue"
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="inputBankNumber" class="form-label">IBAN</label>
+              <input
+                type="text"
+                id="inputBankNumber"
+                class="form-control"
+                v-model="state.bankNumber"
+              />
+            </div>
+            <div class="col-md-6">
+              <label for="inputBankName" class="form-label">Banca</label>
+              <input
+                type="text"
+                id="inputBankName"
+                class="form-control"
+                v-model="state.bankName"
               />
             </div>
 
@@ -101,6 +132,9 @@ const state = reactive({
   country: currentCompany.value?.country ?? "",
   companyNumber: currentCompany.value?.company_number ?? "",
   vatNumber: currentCompany.value?.vat_number ?? "",
+  shareValue: currentCompany.value?.share_value ?? "",
+  bankNumber: currentCompany.value?.bank_number ?? "",
+  bankName: currentCompany.value?.bank_name ?? "",
 });
 
 async function submit() {

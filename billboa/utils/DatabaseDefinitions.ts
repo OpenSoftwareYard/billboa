@@ -87,36 +87,45 @@ export type Database = {
       companies: {
         Row: {
           address: string;
+          bank_name: string | null;
+          bank_number: string | null;
           city: string;
           company_number: string;
           country: string;
           created_at: string;
           id: number;
           name: string;
+          share_value: string | null;
           state: string;
           updated_at: string;
           vat_number: string;
         };
         Insert: {
           address: string;
+          bank_name?: string | null;
+          bank_number?: string | null;
           city: string;
           company_number: string;
           country: string;
           created_at?: string;
           id?: number;
           name: string;
+          share_value?: string | null;
           state: string;
           updated_at?: string;
           vat_number: string;
         };
         Update: {
           address?: string;
+          bank_name?: string | null;
+          bank_number?: string | null;
           city?: string;
           company_number?: string;
           country?: string;
           created_at?: string;
           id?: number;
           name?: string;
+          share_value?: string | null;
           state?: string;
           updated_at?: string;
           vat_number?: string;
