@@ -385,9 +385,15 @@
           </p>
           <p
             data-state="encoded-html"
+            data-ref="company_details-company.vat-number"
+          >
+            &lt;p&gt;{{ company-vat-number }} &lt;/p&gt;
+          </p>
+          <p
+            data-state="encoded-html"
             data-ref="company_details-company.id_number"
           >
-            &lt;p&gt;ID: {{ company-number }} &lt;/p&gt;
+            &lt;p&gt;{{ company-number }} &lt;/p&gt;
           </p>
           <p
             data-state="encoded-html"
@@ -400,6 +406,12 @@
             data-ref="company_details-company.custom2"
           >
             &lt;p&gt;Bank: {{ company-bank-name }} &lt;/p&gt;
+          </p>
+          <p
+          data-state="encoded-html"
+          data-ref="company_details-company.custom3"
+          >
+          &lt;p&gt;Bank: {{ company-share-value }} &lt;/p&gt;
           </p>
         </div>
         <div id="company-address">
