@@ -1,6 +1,5 @@
 <template>
-  {{ $route.params.id }}
-  {{ data?.name }}
+  <ProductEditor :state="state" />
 </template>
 
 <script setup lang="ts">
@@ -18,4 +17,12 @@ const { data } = await supabase
   .single();
 
 route.meta.alias = data?.name;
+
+const state = reactive({
+  id: data!.id,
+  name: data!.name,
+  description: data!.description,
+  price: data!.price,
+  currency: data!.currency,
+});
 </script>

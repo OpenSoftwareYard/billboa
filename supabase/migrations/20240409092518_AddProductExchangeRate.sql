@@ -1,0 +1,1 @@
+alter table products add column exchange_rate numeric(10, 2) default 1;

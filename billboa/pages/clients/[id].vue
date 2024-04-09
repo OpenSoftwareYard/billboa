@@ -1,6 +1,5 @@
 <template>
-  {{ $route.params.id }}
-  {{ data?.name }}
+  <ClientEditor :state="state" />
 </template>
 
 <script setup lang="ts">
@@ -18,4 +17,15 @@ const { data } = await supabase
   .single();
 
 route.meta.alias = data?.name;
+
+const state = reactive({
+  id: data!.id,
+  name: data!.name,
+  address: data!.address,
+  city: data!.city,
+  state: data!.state,
+  country: data!.country,
+  company_number: data!.company_number,
+  company_vat_number: data!.vat_number,
+});
 </script>
