@@ -148,6 +148,9 @@ async function submit() {
       country: state.country,
       company_number: state.companyNumber,
       vat_number: state.vatNumber,
+      share_value: state.shareValue,
+      bank_number: state.bankNumber,
+      bank_name: state.bankName,
     },
     {},
   );
