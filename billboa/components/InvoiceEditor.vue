@@ -258,7 +258,11 @@
                 </button>
               </div>
               <div class="col-xl-12 col-md-4">
-                <button class="btn btn-secondary" style="width: 100%">
+                <button
+                  class="btn btn-secondary"
+                  style="width: 100%"
+                  @click="previewInvoice"
+                >
                   Preview
                 </button>
               </div>
@@ -267,6 +271,14 @@
         </div>
       </div>
     </div>
+  </div>
+  <div class="row">
+    <iframe
+      id="invoicePreview"
+      :srcdoc="invoicePreview"
+      width="595"
+      height="842"
+    ></iframe>
   </div>
 </template>
 
@@ -325,6 +337,8 @@ const clients = ref<Database["public"]["Tables"]["clients"]["Row"][]>([
   state.value.client || emptyClient,
 ]);
 
+const invoicePreview = ref("");
+
 async function getClients() {
   const { data, error } = await supabase
     .from("clients")
@@ -356,7 +370,7 @@ async function addProductRow() {
   });
 }
 
-async function saveInvoice() {
+async function upsertInvoice() {
   const { data, error } = await supabase
     .from("invoices")
     .upsert({
@@ -416,7 +430,25 @@ async function saveInvoice() {
     console.error(invoiceProductError);
     throw invoiceProductError;
   }
+}
 
+async function saveInvoice() {
+  await upsertInvoice();
   router.push("/invoices");
+}
+
+async function previewInvoice() {
+  await upsertInvoice();
+
+  const { data, error } = await supabase.functions.invoke("preview-invoice", {
+    body: { invoice_number: state.value.invoiceNumber },
+  });
+
+  if (error) {
+    // TODO: Better error handling
+    throw error;
+  }
+
+  invoicePreview.value = data;
 }
 </script>

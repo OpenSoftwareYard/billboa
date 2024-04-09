@@ -609,8 +609,8 @@
           </th>
         </thead>
         <tbody>
+          {{#each invoice-products}}
           <tr>
-            {{#each invoice-products}}
             <td
               data-state="encoded-html"
               data-ref="product_table-product.item-td"
@@ -646,8 +646,8 @@
             >
               &lt;p&gt;{{ this.lineTotal }} {{ this.currency }}&lt;/p&gt;
             </td>
-            {{/each}}
           </tr>
+          {{/each}}
         </tbody>
       </table>
       <table id="task-table" cellspacing="0" data-ref="table"></table>
