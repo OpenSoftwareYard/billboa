@@ -204,7 +204,7 @@
           <div class="statbox widget box box-shadow">
             <div class="widget-content widget-content-area br-8">
               <div class="w-header">Notes</div>
-              <textarea class="form-control" rows="5"></textarea>
+              <textarea class="form-control" rows="5" v-model="state.notes"></textarea>
             </div>
           </div>
         </div>

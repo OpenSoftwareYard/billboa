@@ -723,7 +723,9 @@
     </div>
     <div class="repeating-footerx" id="footer">
       <p data-ref="total_table-footer"></p>
-      <p>{{ invoice-notes }}</p>
+      {{#each invoice-notes}}
+      <p>{{ this }}</p>
+      {{/each}}
 
       <script>
         // Clear up space a bit, if [product-table, tasks-table, delivery-note-table] isn't present.

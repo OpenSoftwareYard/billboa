@@ -36,7 +36,7 @@ export const renderInvoice = (invoice: any, templateHTML: string) => {
       quantity: product.quantity[0].quantity,
       lineTotal: new Intl.NumberFormat("en-UK", { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(product.quantity[0].quantity * product.price),
     })),
-    "invoice-notes": invoice.notes,
+    "invoice-notes": invoice.notes.split("\n"),
   });
 
   return htmlContent;
