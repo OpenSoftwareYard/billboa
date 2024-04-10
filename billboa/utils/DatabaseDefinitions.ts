@@ -143,6 +143,7 @@ export type Database = {
           exchange_rate: number;
           id: number;
           invoice_number: string;
+          notes: string | null;
           status: string;
           total_amount: number;
           updated_at: string;
@@ -157,6 +158,7 @@ export type Database = {
           exchange_rate?: number;
           id?: number;
           invoice_number: string;
+          notes?: string | null;
           status: string;
           total_amount: number;
           updated_at?: string;
@@ -171,6 +173,7 @@ export type Database = {
           exchange_rate?: number;
           id?: number;
           invoice_number?: string;
+          notes?: string | null;
           status?: string;
           total_amount?: number;
           updated_at?: string;

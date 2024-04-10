@@ -321,6 +321,7 @@ const props = defineProps<{
     dueDate: string;
     client?: Database["public"]["Tables"]["clients"]["Row"];
     exchangeRate: number;
+    notes: string;
   };
 }>();
 
@@ -384,6 +385,7 @@ async function upsertInvoice() {
       status: "draft",
       total_amount: state.value.totalValue,
       exchange_rate: state.value.exchangeRate,
+      notes: state.value.notes,
     })
     .select();
 
