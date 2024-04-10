@@ -22,5 +22,6 @@ const state = reactive({
   dueDate: "",
   client: undefined,
   exchangeRate: 1,
+  notes: undefined,
 });
 </script>

@@ -36,5 +36,6 @@ const state = reactive({
   dueDate: invoice!.due_date,
   client: invoice!.clients!,
   exchangeRate: invoice!.exchange_rate,
+  notes: invoice!.notes || undefined,
 });
 </script>

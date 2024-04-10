@@ -204,7 +204,11 @@
           <div class="statbox widget box box-shadow">
             <div class="widget-content widget-content-area br-8">
               <div class="w-header">Notes</div>
-              <textarea class="form-control" rows="5" v-model="state.notes"></textarea>
+              <textarea
+                class="form-control"
+                rows="5"
+                v-model="state.notes"
+              ></textarea>
             </div>
           </div>
         </div>
@@ -321,7 +325,7 @@ const props = defineProps<{
     dueDate: string;
     client?: Database["public"]["Tables"]["clients"]["Row"];
     exchangeRate: number;
-    notes: string;
+    notes?: string;
   };
 }>();
 
@@ -416,6 +420,12 @@ async function upsertInvoice() {
     console.error(productError);
     throw productError;
   }
+
+  // Remove product relationships before entering them again
+  const { error: deleteError } = await supabase
+    .from("invoices_products")
+    .delete()
+    .eq("invoice_id", invoiceId);
 
   const { data: invoiceProductData, error: invoiceProductError } =
     await supabase.from("invoices_products").upsert(
