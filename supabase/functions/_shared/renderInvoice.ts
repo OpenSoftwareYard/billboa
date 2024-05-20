@@ -25,16 +25,28 @@ export const renderInvoice = (invoice: any, templateHTML: string) => {
     "invoice-number": invoice.invoice_number,
     "invoice-date": moment(invoice.date).format("DD/MM/YYYY"),
     "invoice-due-date": moment(invoice.due_date).format("DD/MM/YYYY"),
-    "invoice-total-amount": new Intl.NumberFormat("en-UK", { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(invoice.total_amount),
+    "invoice-total-amount": new Intl.NumberFormat("en-UK", {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    }).format(invoice.total_amount),
     "invoice-currency": invoice.currency,
-    "invoice-total-amount-ron": new Intl.NumberFormat("en-UK", { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(invoice.total_amount * invoice.exchange_rate),
+    "invoice-total-amount-ron": new Intl.NumberFormat("en-UK", {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    }).format(invoice.total_amount * invoice.exchange_rate),
     // TODO: Replace this with a proper join type
     // deno-lint-ignore no-explicit-any
     "invoice-products": invoice.products.map((product: any) => ({
       ...product,
-      price: new Intl.NumberFormat("en-UK", { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(product.price),
+      price: new Intl.NumberFormat("en-UK", {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      }).format(product.price),
       quantity: product.quantity[0].quantity,
-      lineTotal: new Intl.NumberFormat("en-UK", { maximumFractionDigits: 2, minimumFractionDigits: 2 }).format(product.quantity[0].quantity * product.price),
+      lineTotal: new Intl.NumberFormat("en-UK", {
+        maximumFractionDigits: 2,
+        minimumFractionDigits: 2,
+      }).format(product.quantity[0].quantity * product.price),
     })),
     "invoice-notes": invoice.notes.split("\n"),
   });
