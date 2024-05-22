@@ -74,6 +74,7 @@
                       v-model="state.invoiceDate"
                       class="form-control"
                       id="invoiceDate"
+                      @on-change="invoiceDateChanged"
                     />
                   </div>
                 </div>
@@ -338,6 +339,33 @@ watch(productRows.value, (newVal) => {
   }, 0);
 });
 
+watch(
+  [() => state.value.currency, () => state.value.invoiceDate],
+  async ([newCurrency, newInvoiceDate]) => {
+    if (newCurrency === "RON" || !newInvoiceDate) {
+      return;
+    }
+
+    const invoiceDate = new Date(newInvoiceDate);
+    const yesterday = new Date(invoiceDate);
+
+    const { data: exchangeRates, error } = await supabase
+      .from("exchange_rates")
+      .select("rate")
+      .eq("currency_from", newCurrency)
+      .eq("currency_to", "RON")
+      .lte("rate_date", yesterday.toDateString())
+      .order("rate_date", { ascending: false });
+
+    if (error) {
+      console.error(error);
+      throw error;
+    }
+
+    state.value.exchangeRate = exchangeRates![0].rate;
+  },
+);
+
 const clients = ref<Database["public"]["Tables"]["clients"]["Row"][]>([
   state.value.client || emptyClient,
 ]);
@@ -463,4 +491,6 @@ async function previewInvoice() {
 
   invoicePreview.value = data;
 }
+
+async function invoiceDateChanged() {}
 </script>
