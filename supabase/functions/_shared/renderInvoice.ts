@@ -62,8 +62,7 @@ export const renderInvoice = (
       minimumFractionDigits: 2,
     }).format(invoice.total_amount * invoice.exchange_rate),
     // TODO: Replace this with a proper join type
-    // deno-lint-ignore no-explicit-any
-    "invoice-products": invoice.products.map((product: any) => ({
+    "invoice-products": invoice.products.map((product) => ({
       ...product,
       price: new Intl.NumberFormat("en-UK", {
         maximumFractionDigits: 2,
@@ -75,7 +74,7 @@ export const renderInvoice = (
         minimumFractionDigits: 2,
       }).format(product.quantity[0].quantity * product.price),
     })),
-    "invoice-notes": invoice.notes?.split("\n"),
+    "invoice-notes": [`Exchange rate 1 ${invoice.currency} = ${invoice.exchange_rate} RON`, ...(invoice.notes?.split("\n") ?? [])],
   });
 
   return htmlContent;
