@@ -2,7 +2,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.2";
 import * as xml from "https://jsr.io/@libs/xml/5.0.2/mod.ts";
 
 import { corsHeaders } from "../_shared/cors.ts";
-import { Database } from "../_shared/DatabaseDefinitions.ts";
+import { Database } from "../_shared/DatabaseDefinitionsGenerated.ts";
 
 const exchangeRateURLs = [
   {

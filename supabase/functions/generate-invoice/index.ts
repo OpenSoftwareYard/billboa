@@ -4,6 +4,8 @@ import puppeteer from "npm:puppeteer-core@21.6.1";
 import { corsHeaders } from "../_shared/cors.ts";
 import { renderInvoice } from "../_shared/renderInvoice.ts";
 
+import { Database } from "../_shared/DatabaseDefinitionsGenerated.ts";
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -11,7 +13,7 @@ Deno.serve(async (req) => {
 
   const IS_PRODUCTION = Deno.env.get("ENVIRONMENT") === "production";
 
-  const supabaseClient = createClient(
+  const supabaseClient = createClient<Database>(
     Deno.env.get("SUPABASE_URL") ?? "",
     Deno.env.get("SUPABASE_ANON_KEY") ?? "",
     {
@@ -65,7 +67,7 @@ Deno.serve(async (req) => {
     printBackground: true,
   });
 
-  const invoicePath = `${invoice.companies.id}/${invoiceDocumentName}.pdf`;
+  const invoicePath = `${invoice.companies!.id}/${invoiceDocumentName}.pdf`;
 
   const { data: _uploadPdfData, error: uploadPdfError } = await supabaseClient
     .storage
