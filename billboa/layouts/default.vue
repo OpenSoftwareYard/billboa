@@ -36,6 +36,9 @@
               </div>
             </div>
             <div class="dropdown-item">
+              <NuxtLink to="/user/settings"> User settings </NuxtLink>
+            </div>
+            <div class="dropdown-item">
               <a href="#" @click="signOut"> Sign Out </a>
             </div>
           </div>

@@ -50,8 +50,16 @@
 
 <script setup lang="ts">
 const { breadcrumbs } = useBreadcrumbs();
+const supabase = useSupabaseClient<Database>();
+const router = useRouter();
 
 definePageMeta({
   middleware: ["auth", "has-company"],
+});
+
+supabase.auth.onAuthStateChange(async (event, session) => {
+  if (event === "PASSWORD_RECOVERY") {
+    router.replace("/reset-password.vue");
+  }
 });
 </script>

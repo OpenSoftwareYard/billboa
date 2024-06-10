@@ -26,10 +26,10 @@
           <div class="card">
             <div class="card-body">
               <div class="row">
-                <form @submit.prevent="signInWithEmail">
+                <form @submit.prevent="resetPassword">
                   <div class="col-md-12 mb-3">
-                    <h2>Sign In</h2>
-                    <p>Enter your email and password to login</p>
+                    <h2>Reset your password</h2>
+                    <p>Enter your email to reset your password</p>
                   </div>
                   <div class="col-md-12">
                     <div class="mb-3">
@@ -42,23 +42,12 @@
                     </div>
                   </div>
                   <div class="col-12">
-                    <div class="mb-3">
-                      <label class="form-label">Password</label>
-                      <input
-                        type="password"
-                        class="form-control"
-                        v-model="newUser.password"
-                      />
-                    </div>
-                  </div>
-                  <div class="col-12">
                     <div class="mb-4">
                       <button type="submit" class="btn btn-secondary w-100">
-                        SIGN IN
+                        Reset password
                       </button>
                     </div>
                   </div>
-
                   <div class="col-12">
                     <div class="text-center">
                       <p class="mb-0">
@@ -68,9 +57,9 @@
                         >
                       </p>
                       <p class="mb-0">
-                        Forgot your password?
-                        <NuxtLink to="/forgot-password" class="text-warning"
-                          >Reset password</NuxtLink
+                        Remembered your password?
+                        <NuxtLink to="/signin" class="text-warning"
+                          >Sign in</NuxtLink
                         >
                       </p>
                     </div>
@@ -97,14 +86,12 @@ definePageMeta({ layout: "fullscreen" });
 
 const newUser = reactive({
   email: "",
-  password: "",
 });
 
-async function signInWithEmail() {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: newUser.email,
-    password: newUser.password,
-  });
+async function resetPassword() {
+  const { data, error } = await supabase.auth.resetPasswordForEmail(
+    newUser.email,
+  );
 
   if (error) {
     console.error(error);
