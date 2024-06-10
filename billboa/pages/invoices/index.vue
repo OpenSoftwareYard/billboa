@@ -77,7 +77,11 @@
             :data="invoices"
             :columns="[
               { name: 'clients.name', label: 'Client' },
-              { name: 'total_amount', label: 'Total Amount' },
+              {
+                name: 'total_amount',
+                label: 'Total Amount',
+                transform: (value) => value / 100,
+              },
               { name: 'currency', label: 'Currency' },
               { name: 'due_date', label: 'Due Date' },
               { name: 'status', label: 'Status' },

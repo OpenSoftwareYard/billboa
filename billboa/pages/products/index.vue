@@ -10,7 +10,11 @@
             :columns="[
               { name: 'name', label: 'Name' },
               { name: 'description', label: 'Description' },
-              { name: 'price', label: 'Price' },
+              {
+                name: 'price',
+                label: 'Price',
+                transform: (value) => value / 100,
+              },
               { name: 'currency', label: 'Currency' },
             ]"
             :idColumn="{ name: 'id', label: 'Record no.' }"

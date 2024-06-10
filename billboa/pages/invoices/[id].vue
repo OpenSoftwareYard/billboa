@@ -23,7 +23,11 @@ const { data: invoice, error } = await supabase
   .single();
 
 const productRows = invoice!.products!.map((product) => ({
-  product,
+  product: {
+    ...product,
+    exchange_rate: product.exchange_rate! / 100,
+    price: product.price / 100,
+  },
   quantity: product.quantity[0].quantity,
 }));
 
@@ -32,10 +36,10 @@ const state = reactive({
   invoiceNumber: invoice!.invoice_number,
   currency: invoice!.currency,
   invoiceDate: invoice!.date,
-  totalValue: invoice!.total_amount,
+  totalValue: invoice!.total_amount / 100,
   dueDate: invoice!.due_date,
   client: invoice!.clients!,
-  exchangeRate: invoice!.exchange_rate,
+  exchangeRate: invoice!.exchange_rate / 100,
   notes: invoice!.notes || undefined,
 });
 </script>

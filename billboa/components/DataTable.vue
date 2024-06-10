@@ -36,7 +36,7 @@
               {{ valueForKey(entry, idColumn.name) }}
             </td>
             <td v-for="column in columns">
-              {{ valueForKey(entry, column.name) }}
+              {{ valueForKey(entry, column.name, column.transform) }}
             </td>
             <td class="text-center" @click.stop v-if="actions">
               <div class="btn-group" role="group">
@@ -74,6 +74,7 @@ const props = defineProps<{
   columns: {
     name: string;
     label: string;
+    transform?: (value: any) => any;
   }[];
   idColumn: {
     name: string;
