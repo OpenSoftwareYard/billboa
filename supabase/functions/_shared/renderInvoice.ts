@@ -55,26 +55,26 @@ export const renderInvoice = (
     "invoice-total-amount": new Intl.NumberFormat("en-UK", {
       maximumFractionDigits: 2,
       minimumFractionDigits: 2,
-    }).format(invoice.total_amount / 1000),
+    }).format(invoice.total_amount / 10000),
     "invoice-currency": invoice.currency,
     "invoice-total-amount-ron": new Intl.NumberFormat("en-UK", {
       maximumFractionDigits: 2,
       minimumFractionDigits: 2,
-    }).format(invoice.total_amount * invoice.exchange_rate / 1000 / 1000),
+    }).format(invoice.total_amount * invoice.exchange_rate / 10000 / 10000),
     // TODO: Replace this with a proper join type
     "invoice-products": invoice.products.map((product) => ({
       ...product,
       price: new Intl.NumberFormat("en-UK", {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2,
-      }).format(product.price / 1000),
+      }).format(product.price / 10000),
       quantity: product.quantity[0].quantity,
       lineTotal: new Intl.NumberFormat("en-UK", {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2,
-      }).format(product.quantity[0].quantity * product.price / 1000),
+      }).format(product.quantity[0].quantity * product.price / 10000),
     })),
-    "invoice-notes": [`Exchange rate 1 ${invoice.currency} = ${invoice.exchange_rate / 1000} RON`, ...(invoice.notes?.split("\n") ?? [])],
+    "invoice-notes": [`Exchange rate 1 ${invoice.currency} = ${invoice.exchange_rate / 10000} RON`, ...(invoice.notes?.split("\n") ?? [])],
   });
 
   return htmlContent;

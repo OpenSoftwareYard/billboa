@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
         return {
           date:
             `${match.groups?.year}-${match.groups?.month}-${match.groups?.day}`,
-          exchangeRate: Number(match.groups!.exchangeRate) * 1000,
+          exchangeRate: Number(match.groups!.exchangeRate) * 10000,
         };
       }
     });

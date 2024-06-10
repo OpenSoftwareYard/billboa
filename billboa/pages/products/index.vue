@@ -13,7 +13,7 @@
               {
                 name: 'price',
                 label: 'Price',
-                transform: (value) => value / 1000,
+                transform: (value) => value / 10000,
               },
               { name: 'currency', label: 'Currency' },
             ]"

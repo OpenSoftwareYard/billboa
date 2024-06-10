@@ -415,8 +415,8 @@ async function upsertInvoice() {
       client_id: state.value.client!.id,
       company_id: currentCompany.value!.id,
       status: "draft",
-      total_amount: state.value.totalValue * 1000,
-      exchange_rate: state.value.exchangeRate * 1000,
+      total_amount: state.value.totalValue * 10000,
+      exchange_rate: state.value.exchangeRate * 10000,
       notes: state.value.notes,
     })
     .select();
@@ -436,7 +436,7 @@ async function upsertInvoice() {
           id: productRow.product.id,
           name: productRow.product.name,
           description: productRow.product.description,
-          price: productRow.product.price * 1000,
+          price: productRow.product.price * 10000,
           currency: productRow.product.currency,
           company_id: currentCompany.value!.id,
         };
