@@ -80,7 +80,7 @@
               {
                 name: 'total_amount',
                 label: 'Total Amount',
-                transform: (value) => value / 100,
+                transform: (value) => value / 1000,
               },
               { name: 'currency', label: 'Currency' },
               { name: 'due_date', label: 'Due Date' },
