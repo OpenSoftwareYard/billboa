@@ -74,7 +74,12 @@ export const renderInvoice = (
         minimumFractionDigits: 2,
       }).format(product.quantity[0].quantity * product.price / 10000),
     })),
-    "invoice-notes": [`Exchange rate 1 ${invoice.currency} = ${invoice.exchange_rate / 10000} RON`, ...(invoice.notes?.split("\n") ?? [])],
+    "invoice-notes": [
+      `Exchange rate 1 ${invoice.currency} = ${
+        invoice.exchange_rate / 10000
+      } RON`,
+      ...(invoice.notes?.split("\n") ?? []),
+    ],
   });
 
   return htmlContent;

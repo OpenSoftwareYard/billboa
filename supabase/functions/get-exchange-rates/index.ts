@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
         return {
           date:
             `${match.groups?.year}-${match.groups?.month}-${match.groups?.day}`,
-          exchangeRate: Number(match.groups!.exchangeRate) * 10000,
+          exchangeRate: Math.round(Number(match.groups!.exchangeRate) * 10000),
         };
       }
     });
@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
       const { error } = await supabaseClient.from("exchange_rates").upsert({
         currency_from: exchangeRate.from,
         currency_to: exchangeRate.to,
-        rate: Number(exchangeRate.rate!.exchangeRate!),
+        rate: exchangeRate.rate!.exchangeRate!,
         rate_date: exchangeRate.rate!.date!,
       });
 
