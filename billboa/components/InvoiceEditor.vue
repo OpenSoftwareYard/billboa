@@ -297,7 +297,7 @@ const supabase = useSupabaseClient<Database>();
 const router = useRouter();
 
 type ProductRow = {
-  product: Database["public"]["Tables"]["products"]["Row"];
+  product: Database["public"]["Tables"]["products"]["Insert"];
   quantity: number;
 };
 
@@ -389,7 +389,7 @@ async function getClients() {
 async function addProductRow() {
   productRows.value.push({
     product: {
-      id: -1,
+      id: undefined,
       name: "",
       description: "",
       price: 0,

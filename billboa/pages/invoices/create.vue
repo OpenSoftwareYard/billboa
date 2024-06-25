@@ -8,7 +8,7 @@ definePageMeta({
 });
 
 type ProductRow = {
-  product: Database["public"]["Tables"]["products"]["Row"];
+  product: Database["public"]["Tables"]["products"]["Insert"];
   quantity: number;
 };
 
