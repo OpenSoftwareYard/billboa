@@ -4,7 +4,10 @@ export default defineNuxtConfig({
   ssr: false,
   css: ["~/assets/scss/main.scss"],
   modules: ["@nuxtjs/supabase", "nuxt-icon"],
+
   supabase: {
     redirect: false,
   },
+
+  compatibilityDate: "2024-07-09",
 });

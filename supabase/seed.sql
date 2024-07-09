@@ -11,8 +11,8 @@ public.products (company_id, name, description, price, currency)
 values ((SELECT currval(pg_get_serial_sequence('companies','id'))), 'Product 1', 'This is a product', 100, 'USD');
 
 insert into
-public.invoices (client_id, company_id, invoice_number, date, due_date, total_amount, status, currency, exchange_rate)
-values ((SELECT currval(pg_get_serial_sequence('clients','id'))), (SELECT currval(pg_get_serial_sequence('companies','id'))), 'INV-0001', '2021-01-01', '2021-01-31', 100, 'draft', 'USD', 1.0);
+public.invoices (client_id, company_id, invoice_number, date, due_date, status, currency, exchange_rate)
+values ((SELECT currval(pg_get_serial_sequence('clients','id'))), (SELECT currval(pg_get_serial_sequence('companies','id'))), 'INV-0001', '2021-01-01', '2021-01-31', 'draft', 'USD', 1.0);
 
 insert into
 public.invoices_products (invoice_id, product_id, quantity)

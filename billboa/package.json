@@ -7,14 +7,15 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@types/bootstrap": "^5.2.10",
     "nuxt": "^3.8.2",
     "nuxt-icon": "^0.6.7",
-    "prettier": "^3.1.1",
+    "prettier": "^3.3.2",
     "sass": "^1.69.5",
     "supabase": "^1.127.4",
     "vue": "^3.3.8",

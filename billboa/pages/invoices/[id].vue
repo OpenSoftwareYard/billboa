@@ -11,7 +11,7 @@ definePageMeta({
 });
 
 const { data: invoice, error } = await supabase
-  .from("invoices")
+  .from("invoices_view")
   .select(
     `*,
       companies (*),
@@ -36,10 +36,10 @@ const state = reactive({
   invoiceNumber: invoice!.invoice_number,
   currency: invoice!.currency,
   invoiceDate: invoice!.date,
-  totalValue: invoice!.total_amount / 10000,
+  totalValue: invoice!.total_amount! / 10000,
   dueDate: invoice!.due_date,
   client: invoice!.clients!,
-  exchangeRate: invoice!.exchange_rate / 10000,
+  exchangeRate: invoice!.exchange_rate! / 10000,
   notes: invoice!.notes || undefined,
 });
 </script>

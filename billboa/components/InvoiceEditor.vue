@@ -158,7 +158,7 @@
                           <BBSelect
                             :options="['RON', 'EUR', 'USD']"
                             :default="productRow.product.currency"
-                            @input="productRow.product.currency = $event"
+                            @input="productRow.product.currency = $event!"
                           />
                           <div
                             v-if="productRow.product.currency != state.currency"
@@ -415,7 +415,6 @@ async function upsertInvoice() {
       client_id: state.value.client!.id,
       company_id: currentCompany.value!.id,
       status: "draft",
-      total_amount: state.value.totalValue * 10000,
       exchange_rate: state.value.exchangeRate * 10000,
       notes: state.value.notes,
     })
@@ -428,26 +427,23 @@ async function upsertInvoice() {
 
   const invoiceId = data![0].id;
 
-  const { data: productData, error: productError } = await supabase
-    .from("products")
-    .upsert(
-      productRows.value.map((productRow) => {
-        return {
-          id: productRow.product.id,
-          name: productRow.product.name,
-          description: productRow.product.description,
-          price: productRow.product.price * 10000,
-          currency: productRow.product.currency,
-          company_id: currentCompany.value!.id,
-        };
-      }),
-    )
-    .select();
+  const productUpdates = productRows.value.map(async (productRow) => {
+    const { data: productData, error: productError } = await supabase
+      .from("products")
+      .upsert({
+        id: productRow.product.id,
+        name: productRow.product.name,
+        description: productRow.product.description,
+        price: productRow.product.price * 10000,
+        currency: productRow.product.currency,
+        company_id: currentCompany.value!.id,
+      })
+      .select();
 
-  if (productError) {
-    console.error(productError);
-    throw productError;
-  }
+    return productData;
+  });
+
+  const productData = (await Promise.all(productUpdates)).flat();
 
   // Remove product relationships before entering them again
   const { error: deleteError } = await supabase
@@ -457,7 +453,8 @@ async function upsertInvoice() {
 
   const { data: invoiceProductData, error: invoiceProductError } =
     await supabase.from("invoices_products").upsert(
-      productData!.map((product, index) => {
+      productData!.flatMap((product: any, index: number) => {
+        console.log(product);
         return {
           invoice_id: invoiceId,
           product_id: product.id,

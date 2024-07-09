@@ -146,7 +146,7 @@ const { data: invoices } = await useAsyncData(
     const { currentCompany } = await useCurrentCompany();
 
     const { data } = await supabase
-      .from("invoices")
+      .from("invoices_view")
       .select("*, clients (name)")
       .eq("company_id", currentCompany.value!.id);
     return data;
