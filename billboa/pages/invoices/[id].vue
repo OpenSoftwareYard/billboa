@@ -32,12 +32,12 @@ const productRows = invoice!.products!.map((product) => ({
 }));
 
 const state = reactive({
-  id: invoice!.id,
-  invoiceNumber: invoice!.invoice_number,
-  currency: invoice!.currency,
-  invoiceDate: invoice!.date,
+  id: invoice!.id!,
+  invoiceNumber: invoice!.invoice_number!,
+  currency: invoice!.currency!,
+  invoiceDate: invoice!.date!,
   totalValue: invoice!.total_amount! / 10000,
-  dueDate: invoice!.due_date,
+  dueDate: invoice!.due_date!,
   client: invoice!.clients!,
   exchangeRate: invoice!.exchange_rate! / 10000,
   notes: invoice!.notes || undefined,
