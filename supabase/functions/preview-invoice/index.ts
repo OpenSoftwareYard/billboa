@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
   const { invoice_number } = await req.json();
 
   const { data: invoice, error } = await supabaseClient
-    .from("invoices")
+    .from("invoices_view")
     .select(`*,
       companies (*),
       clients (*),
