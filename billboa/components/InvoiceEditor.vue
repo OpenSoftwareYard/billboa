@@ -362,7 +362,7 @@ watch(
       throw error;
     }
 
-    state.value.exchangeRate = exchangeRates![0].rate;
+    state.value.exchangeRate = exchangeRates![0].rate / 10000;
   },
 );
 
