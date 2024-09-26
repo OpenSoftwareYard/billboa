@@ -39,7 +39,7 @@ const state = reactive({
   totalValue: invoice!.total_amount! / 10000,
   dueDate: invoice!.due_date!,
   client: invoice!.clients!,
-  exchangeRate: invoice!.exchange_rate! / 10000,
+  exchangeRate: invoice!.exchange_rate!,
   notes: invoice!.notes || undefined,
 });
 </script>

@@ -362,7 +362,7 @@ watch(
       throw error;
     }
 
-    state.value.exchangeRate = exchangeRates![0].rate / 10000;
+    state.value.exchangeRate = exchangeRates![0].rate;
   },
 );
 
@@ -415,7 +415,7 @@ async function upsertInvoice() {
       client_id: state.value.client!.id,
       company_id: currentCompany.value!.id,
       status: "draft",
-      exchange_rate: state.value.exchangeRate * 10000,
+      exchange_rate: state.value.exchangeRate,
       notes: state.value.notes,
     })
     .select();
