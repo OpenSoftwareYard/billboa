@@ -8,7 +8,7 @@ const exchangeRateURLs = [
   {
     from: "EUR",
     to: "RON",
-    url: "https://bnr.ro/RSS_200003_EUR.aspx",
+    url: "https://www.bnro.ro/RSS_200003_EUR.aspx",
   },
 ];
 
