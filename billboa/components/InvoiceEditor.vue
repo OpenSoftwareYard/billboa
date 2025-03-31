@@ -160,12 +160,9 @@
                             :default="productRow.currency"
                             @input="productRow.currency = $event!"
                           />
-                          <div
-                            v-if="productRow.currency != state.currency"
-                          >
+                          <div v-if="productRow.currency != state.currency">
                             <span
-                              >Exchange rate 1
-                              {{ productRow.currency }} = x
+                              >Exchange rate 1 {{ productRow.currency }} = x
                               {{ state.currency }}</span
                             >
                             <input
@@ -406,12 +403,10 @@ async function upsertInvoice() {
       status: "draft",
       exchange_rate: state.value.exchangeRate,
       notes: state.value.notes,
-      products: state.value.products.map((product) => (
-        {
-          ...product,
-          price: product.price * 10000
-        }
-      )),
+      products: state.value.products.map((product) => ({
+        ...product,
+        price: product.price * 10000,
+      })),
     })
     .select();
 

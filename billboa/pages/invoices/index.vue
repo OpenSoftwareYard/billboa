@@ -83,7 +83,11 @@
                 transform: (value: number) => value / 10000,
               },
               { name: 'currency', label: 'Currency' },
-              { name: 'due_date', label: 'Due Date' },
+              {
+                name: 'due_date',
+                label: 'Due Date',
+                transform: (value: string) => formatDate(value),
+              },
               { name: 'status', label: 'Status' },
             ]"
             :idColumn="{ name: 'invoice_number', label: 'Invoice No.' }"
@@ -98,6 +102,11 @@
                 label: 'Delete',
                 icon: 'dashicons:trash',
                 action: confirmInvoiceDelete,
+              },
+              {
+                label: 'Duplicate',
+                icon: 'dashicons:columns',
+                action: duplicateInvoice,
               },
               {
                 label: 'Mark as Sent',
@@ -148,13 +157,26 @@ const { data: invoices } = await useAsyncData(
     const { data } = await supabase
       .from("invoices_view")
       .select("*, clients (name)")
-      .eq("company_id", currentCompany.value!.id);
+      .eq("company_id", currentCompany.value!.id)
+      .order("date", {
+        ascending: false,
+      });
     return data;
   },
   {
     watch: [shouldRefreshData],
   },
 );
+
+// Format date to readable format
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-UK", {
+    month: "numeric",
+    day: "numeric",
+    year: "numeric",
+  });
+};
 
 async function navigateToInvoice(invoiceId: string) {
   await router.push(`/invoices/${invoiceId}`);
@@ -178,6 +200,39 @@ async function deleteInvoice() {
   state.itemToDelete = null;
   shouldRefreshData.value = !shouldRefreshData.value;
   state.deleteItemModal?.hide();
+}
+
+async function duplicateInvoice(invoiceId: string) {
+  const invoice = invoices.value?.find((i) => i.invoice_number === invoiceId);
+  if (!invoice) {
+    throw new Error("Invoice not found");
+  }
+
+  const today = new Date();
+  const newDueDate = new Date();
+  newDueDate.setDate(newDueDate.getDate() + 14);
+
+  const { data, error } = await supabase
+    .from("invoices")
+    .insert({
+      invoice_number: "REPLACE_ME",
+      currency: invoice.currency!,
+      date: today.toISOString(),
+      due_date: newDueDate.toISOString(),
+      client_id: invoice.client_id!,
+      company_id: invoice.company_id!,
+      status: "draft",
+      exchange_rate: invoice.exchange_rate!,
+      notes: invoice.notes!,
+      products: invoice.products!,
+    })
+    .select();
+
+  if (error) {
+    console.error(error);
+  } else {
+    await navigateToInvoice(data[0].invoice_number);
+  }
 }
 
 async function markInvoiceAsSent(invoiceId: string) {

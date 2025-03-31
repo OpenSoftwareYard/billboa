@@ -12,7 +12,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2024-07-09",
   vite: {
     server: {
-      allowedHosts: ["osy-devenv-vm"]
-    }
-  }
+      allowedHosts: ["osy-devenv-vm"],
+    },
+  },
 });

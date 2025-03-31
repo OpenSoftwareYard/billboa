@@ -19,15 +19,6 @@
       </NuxtLink>
     </li>
 
-    <li :class="routeClass('products')">
-      <NuxtLink to="/products" class="dropdown-toggle">
-        <div class="">
-          <Icon name="dashicons:products" />
-          <span>Products</span>
-        </div>
-      </NuxtLink>
-    </li>
-
     <li :class="routeClass('invoices')">
       <NuxtLink to="/invoices" class="dropdown-toggle">
         <div class="">
