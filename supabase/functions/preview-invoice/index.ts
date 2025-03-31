@@ -26,8 +26,7 @@ Deno.serve(async (req) => {
     .from("invoices_view")
     .select(`*,
       companies (*),
-      clients (*),
-      products (*, quantity: invoices_products(quantity))
+      clients (*)
     `)
     .eq("invoice_number", invoice_number)
     .single();

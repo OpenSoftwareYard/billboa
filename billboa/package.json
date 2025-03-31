@@ -17,7 +17,7 @@
     "nuxt-icon": "^0.6.7",
     "prettier": "^3.3.2",
     "sass": "^1.69.5",
-    "supabase": "^1.127.4",
+    "supabase": "^2.20.5",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },

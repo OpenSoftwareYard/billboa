@@ -7,6 +7,7 @@ import { HandlebarsJS } from "https://deno.land/x/handlebars@v0.10.0/mod.ts";
 import moment from "npm:moment@2.29.1";
 
 import { Database } from "./DatabaseDefinitionsGenerated.ts";
+import type { Product } from "./Types.ts";
 
 const supabaseClient = createClient<Database>(
   Deno.env.get("SUPABASE_URL") ?? "",
@@ -17,8 +18,7 @@ const invoicesWithCompaniesAndProductsQuery = supabaseClient
   .from("invoices_view")
   .select(`*,
       companies (*),
-      clients (*),
-      products (*, quantity: invoices_products(quantity))
+      clients (*)
     `)
   .single();
 
@@ -62,17 +62,17 @@ export const renderInvoice = (
       minimumFractionDigits: 2,
     }).format(invoice.total_amount! * invoice.exchange_rate! / 10000 / 10000),
     // TODO: Replace this with a proper join type
-    "invoice-products": invoice.products.map((product) => ({
+    "invoice-products": invoice.products.map((product: Product) => ({
       ...product,
       price: new Intl.NumberFormat("en-UK", {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2,
       }).format(product.price / 10000),
-      quantity: product.quantity[0].quantity,
+      quantity: product.quantity,
       lineTotal: new Intl.NumberFormat("en-UK", {
         maximumFractionDigits: 2,
         minimumFractionDigits: 2,
-      }).format(product.quantity[0].quantity * product.price / 10000),
+      }).format(product.quantity * product.price / 10000),
     })),
     "invoice-notes": [
       `Exchange rate 1 ${invoice.currency} = ${

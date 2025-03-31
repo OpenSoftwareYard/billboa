@@ -46,7 +46,7 @@
                     <BBSelect
                       :options="['RON', 'EUR', 'USD']"
                       :default="state.currency"
-                      @input="state.currency = $event"
+                      @input="state.currency = $event!"
                     />
                   </div>
                 </div>
@@ -123,21 +123,21 @@
                           <input
                             type="text"
                             class="form-control"
-                            v-model="productRow.product.name"
+                            v-model="productRow.name"
                           />
                         </td>
                         <td>
                           <input
                             type="text"
                             class="form-control"
-                            v-model="productRow.product.description"
+                            v-model="productRow.description"
                           />
                         </td>
                         <td>
                           <input
                             type="number"
                             class="form-control"
-                            v-model="productRow.product.price"
+                            v-model="productRow.price"
                           />
                         </td>
                         <td>
@@ -150,28 +150,28 @@
                         <td>
                           {{
                             (
-                              productRow.product.price * productRow.quantity
+                              productRow.price * productRow.quantity
                             ).toLocaleString()
                           }}
                         </td>
                         <td>
                           <BBSelect
                             :options="['RON', 'EUR', 'USD']"
-                            :default="productRow.product.currency"
-                            @input="productRow.product.currency = $event!"
+                            :default="productRow.currency"
+                            @input="productRow.currency = $event!"
                           />
                           <div
-                            v-if="productRow.product.currency != state.currency"
+                            v-if="productRow.currency != state.currency"
                           >
                             <span
                               >Exchange rate 1
-                              {{ productRow.product.currency }} = x
+                              {{ productRow.currency }} = x
                               {{ state.currency }}</span
                             >
                             <input
                               type="text"
                               class="form-control"
-                              v-model="productRow.product.exchange_rate"
+                              v-model="productRow.exchange_rate"
                             />
                           </div>
                         </td>
@@ -316,7 +316,6 @@ const emptyClient = {
 };
 
 const props = defineProps<{
-  productRows: ProductRow[];
   state: {
     id?: number;
     invoiceNumber: string;
@@ -327,15 +326,16 @@ const props = defineProps<{
     client?: Database["public"]["Tables"]["clients"]["Row"];
     exchangeRate: number;
     notes?: string;
+    products: Product[];
   };
 }>();
 
-const productRows = ref(props.productRows);
+const productRows = ref(props.state.products);
 const state = ref(props.state);
 
 watch(productRows.value, (newVal) => {
   state.value.totalValue = newVal.reduce((prev, curr) => {
-    return prev + curr.product.price * curr.quantity;
+    return prev + curr.price * curr.quantity;
   }, 0);
 });
 
@@ -388,17 +388,11 @@ async function getClients() {
 
 async function addProductRow() {
   productRows.value.push({
-    product: {
-      id: undefined,
-      name: "",
-      description: "",
-      price: 0,
-      company_id: currentCompany.value!.id,
-      created_at: "",
-      updated_at: "",
-      currency: "EUR",
-      exchange_rate: 1,
-    },
+    name: "",
+    description: "",
+    price: 0,
+    currency: "EUR",
+    exchange_rate: 1,
     quantity: 0,
   });
 }
@@ -417,55 +411,13 @@ async function upsertInvoice() {
       status: "draft",
       exchange_rate: state.value.exchangeRate,
       notes: state.value.notes,
+      products: state.value.products,
     })
     .select();
 
   if (error) {
     console.error(error);
     throw error;
-  }
-
-  const invoiceId = data![0].id;
-
-  const productUpdates = productRows.value.map(async (productRow) => {
-    const { data: productData, error: productError } = await supabase
-      .from("products")
-      .upsert({
-        id: productRow.product.id,
-        name: productRow.product.name,
-        description: productRow.product.description,
-        price: productRow.product.price * 10000,
-        currency: productRow.product.currency,
-        company_id: currentCompany.value!.id,
-      })
-      .select();
-
-    return productData;
-  });
-
-  const productData = (await Promise.all(productUpdates)).flat();
-
-  // Remove product relationships before entering them again
-  const { error: deleteError } = await supabase
-    .from("invoices_products")
-    .delete()
-    .eq("invoice_id", invoiceId);
-
-  const { data: invoiceProductData, error: invoiceProductError } =
-    await supabase.from("invoices_products").upsert(
-      productData!.flatMap((product: any, index: number) => {
-        console.log(product);
-        return {
-          invoice_id: invoiceId,
-          product_id: product.id,
-          quantity: productRows.value[index].quantity,
-        };
-      }),
-    );
-
-  if (invoiceProductError) {
-    console.error(invoiceProductError);
-    throw invoiceProductError;
   }
 }
 

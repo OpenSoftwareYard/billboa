@@ -1,18 +1,11 @@
 <template>
-  <InvoiceEditor :productRows="productRows" :state="state" />
+  <InvoiceEditor :state="state" />
 </template>
 
 <script setup lang="ts">
 definePageMeta({
   middleware: ["auth", "has-company"],
 });
-
-type ProductRow = {
-  product: Database["public"]["Tables"]["products"]["Insert"];
-  quantity: number;
-};
-
-const productRows = ref<ProductRow[]>([]);
 
 const state = reactive({
   invoiceNumber: "",
@@ -23,5 +16,6 @@ const state = reactive({
   client: undefined,
   exchangeRate: 1,
   notes: undefined,
+  products: [],
 });
 </script>

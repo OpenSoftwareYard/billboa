@@ -1,5 +1,5 @@
 <template>
-  <InvoiceEditor :productRows="productRows" :state="state" />
+  <InvoiceEditor :state="state" />
 </template>
 
 <script setup lang="ts">
@@ -15,20 +15,15 @@ const { data: invoice, error } = await supabase
   .select(
     `*,
       companies (*),
-      clients (*),
-      products (*, quantity: invoices_products(quantity))
+      clients (*)
     `,
   )
   .eq("invoice_number", route.params.id)
   .single();
 
-const productRows = invoice!.products!.map((product) => ({
-  product: {
-    ...product,
-    exchange_rate: product.exchange_rate! / 0,
-    price: product.price / 10000,
-  },
-  quantity: product.quantity[0].quantity,
+const productRows = (invoice!.products! as Product[]).map((product) => ({
+  ...product,
+  price: product.price / 10000,
 }));
 
 const state = reactive({
@@ -41,5 +36,6 @@ const state = reactive({
   client: invoice!.clients!,
   exchangeRate: invoice!.exchange_rate!,
   notes: invoice!.notes || undefined,
+  products: productRows
 });
 </script>
