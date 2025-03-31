@@ -1,5 +1,4 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.2";
-import puppeteer from "npm:puppeteer-core@21.6.1";
 
 import { corsHeaders } from "../_shared/cors.ts";
 import { renderInvoice } from "../_shared/renderInvoice.ts";
@@ -41,12 +40,12 @@ Deno.serve(async (req) => {
   const invoiceDocumentName = crypto.randomUUID();
 
   const browserlessUrl = IS_PRODUCTION
-    ? `wss://chrome.browserless.io?token=${
+    ? `https://production-sfo.browserless.io/pdf?token=${
       Deno.env.get(
         "PUPPETEER_BROWSERLESS_IO_KEY",
       )
     }`
-    : "ws://browserless:3000";
+    : "https://browserless:3000";
 
   const templateHTML = await fetch(
     `${Deno.env.get("TEMPLATES_URL")}/default.html`,
@@ -54,24 +53,29 @@ Deno.serve(async (req) => {
 
   const htmlContent = renderInvoice(invoice, await templateHTML.text());
 
-  const browser = await puppeteer.connect({
-    browserWSEndpoint: browserlessUrl,
+  const pdfResponse = await fetch(browserlessUrl, {
+    method: "POST",
+    headers: {
+      "Cache-Control": "no-cache",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      html: htmlContent,
+      options: {
+        printBackground: true,
+        format: "A4",
+      },
+    }),
   });
-  const page = await browser.newPage();
 
-  await page.setContent(htmlContent);
-
-  const pdf = await page.pdf({
-    format: "A4",
-    printBackground: true,
-  });
+  const pdfBuffer = await pdfResponse.arrayBuffer();
 
   const invoicePath = `${invoice.companies!.id}/${invoiceDocumentName}.pdf`;
 
   const { data: _uploadPdfData, error: uploadPdfError } = await supabaseClient
     .storage
     .from("invoices")
-    .upload(invoicePath, pdf, {
+    .upload(invoicePath, pdfBuffer, {
       contentType: "application/pdf",
       upsert: false,
     });
