@@ -18,7 +18,7 @@ const { data: invoice, error } = await supabase
       clients (*)
     `,
   )
-  .eq("invoice_number", route.params.id)
+  .eq("invoice_number", route.params.id as string)
   .single();
 
 const productRows = (invoice!.products! as Product[]).map((product) => ({

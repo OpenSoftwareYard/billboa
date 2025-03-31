@@ -296,11 +296,6 @@ const { currentCompany } = await useCurrentCompany();
 const supabase = useSupabaseClient<Database>();
 const router = useRouter();
 
-type ProductRow = {
-  product: Database["public"]["Tables"]["products"]["Insert"];
-  quantity: number;
-};
-
 const emptyClient = {
   address: "",
   city: "",
@@ -411,7 +406,12 @@ async function upsertInvoice() {
       status: "draft",
       exchange_rate: state.value.exchangeRate,
       notes: state.value.notes,
-      products: state.value.products,
+      products: state.value.products.map((product) => (
+        {
+          ...product,
+          price: product.price * 10000
+        }
+      )),
     })
     .select();
 
