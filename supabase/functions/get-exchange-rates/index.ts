@@ -1,5 +1,5 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.2";
-import * as xml from "https://jsr.io/@libs/xml/5.0.2/mod.ts";
+import * as xml from "jsr:@libs/xml";
 
 import { corsHeaders } from "../_shared/cors.ts";
 import { Database } from "../_shared/DatabaseDefinitionsGenerated.ts";
@@ -8,12 +8,9 @@ const exchangeRateURLs = [
   {
     from: "EUR",
     to: "RON",
-    url: "https://www.bnro.ro/RSS_200003_EUR.aspx",
+    url: "https://curs.bnr.ro/nbrfxrates.xml",
   },
 ];
-
-const exchangeRateRegex =
-  /1 [A-Z]{3} = (?<exchangeRate>\d{1,4}\.\d{1,4}).*(?<day>\d{2})-(?<month>\d{2})-(?<year>\d{4})/g;
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -29,28 +26,36 @@ Deno.serve(async (req) => {
     const response = await fetch(url.url);
     const xmlText = await response.text();
     const parsedXml = xml.parse(xmlText) as unknown as {
-      rss: {
-        channel: {
-          item: {
-            title: string;
-          }[];
+      DataSet: {
+        Body: {
+          Cube: {
+            "@date": string;
+            Rate: {
+              "#text": string;
+              "@currency": string;
+            }[];
+          };
         };
       };
     };
 
-    const rates = parsedXml.rss.channel.item.map((item) => {
-      const match = exchangeRateRegex.exec(item.title);
-      if (match) {
-        exchangeRateRegex.lastIndex = 0;
-        return {
-          date:
-            `${match.groups?.year}-${match.groups?.month}-${match.groups?.day}`,
-          exchangeRate: Math.round(Number(match.groups!.exchangeRate) * 10000),
-        };
-      }
-    });
+    const cube = parsedXml.DataSet.Body.Cube;
 
-    return { ...url, rates };
+    const foundRate = cube.Rate.find(
+      (rate) => rate["@currency"] === url.from,
+    );
+
+    return {
+      ...url,
+      rates: [
+        foundRate
+          ? {
+            date: cube["@date"],
+            exchangeRate: Math.round(Number(foundRate["#text"]) * 10000), // Convert to basis points
+          }
+          : undefined,
+      ],
+    };
   });
 
   // Transform the data to a flat array of exchange rates
