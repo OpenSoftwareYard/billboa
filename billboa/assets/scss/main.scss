@@ -1,11 +1,47 @@
+// Web font — kept first so the emitted CSS @import stays valid
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
 @import "../../node_modules/bootstrap/scss/_functions";
+
+// ============================================================
+//  Modern design tokens
+//  Must precede Bootstrap's !default variable definitions so
+//  every Bootstrap component picks up the new brand + shape.
+// ============================================================
+$primary: #10b981; // emerald
+$success: #059669;
+$info: #0ea5e9;
+$warning: #f59e0b;
+$danger: #ef4444;
+$secondary: #64748b;
+$dark: #0f172a;
+
+$body-bg: #f8fafc;
+$body-color: #475569;
+
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+  "Helvetica Neue", Arial, sans-serif;
+
+$border-radius: 0.625rem;
+$border-radius-sm: 0.5rem;
+$border-radius-lg: 0.875rem;
+$border-radius-xl: 1rem;
+
+$box-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+$box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
+$box-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.12);
+
+$input-btn-focus-width: 0.25rem;
+$input-btn-focus-color-opacity: 0.15;
+
+// Load the rest of Bootstrap with the tokens above applied
 @import "../../node_modules/bootstrap/scss/_variables";
 @import "../../node_modules/bootstrap/scss/_mixins";
-
-// Finally load bootstrap
 @import "../../node_modules/bootstrap/scss/bootstrap";
 
 @import "loader";
 @import "structure";
 @import "theme_main";
-@import url("https://fonts.googleapis.com/css?family=Nunito:400,600,700");
+
+// Modern override layer — must load last so it wins the cascade
+@import "modern";
